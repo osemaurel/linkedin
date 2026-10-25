@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+coverage
+*.min.*
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+claude.md
+src/lib/database.types.ts
