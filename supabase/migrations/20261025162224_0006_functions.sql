@@ -1,10 +1,10 @@
 -- Fonctions et triggers
 -- 1. updated_at automatique
 -- 2. Création du profil à l'inscription
--- 3. Verrou sur credits_balance : seul le registre peut le modifier
--- 4. Calcul de balance_after + synchronisation de credits_balance
--- 5. Débit automatique au succès d'une génération
--- 6. Crédit automatique à l'encaissement d'un paiement
+-- 3. Calcul de balance_after + synchronisation de credits_balance
+-- 4. Débit automatique au succès d'une génération
+-- 5. Crédit automatique à l'encaissement d'un paiement
+-- Le verrou sur profiles.credits_balance est posé par droits de colonne (0007_rls.sql).
 
 -- ---------------------------------------------------------------------------
 -- updated_at
@@ -12,6 +12,7 @@
 create or replace function set_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at := now();
@@ -75,38 +76,20 @@ create trigger on_auth_user_created
   for each row execute function handle_new_user();
 
 -- ---------------------------------------------------------------------------
--- Verrou sur profiles.credits_balance
--- Modifiable uniquement par le trigger de synchronisation (service_role via
--- insertions dans credit_transactions). Toute écriture directe par un
--- utilisateur authentifié est annulée silencieusement en revenant à l'ancienne
--- valeur.
--- ---------------------------------------------------------------------------
-create or replace function profiles_lock_credits_balance()
-returns trigger
-language plpgsql
-as $$
-begin
-  if auth.uid() is not null and new.credits_balance is distinct from old.credits_balance then
-    new.credits_balance := old.credits_balance;
-  end if;
-  return new;
-end;
-$$;
-
-create trigger trg_profiles_lock_credits
-  before update on profiles
-  for each row execute function profiles_lock_credits_balance();
-
--- ---------------------------------------------------------------------------
 -- credit_transactions : balance_after calculé, profiles.credits_balance resynchronisé
 -- ---------------------------------------------------------------------------
 create or replace function credit_transactions_set_balance_after()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 declare
   v_current integer;
 begin
+  -- Sérialise les mouvements d'un même utilisateur : sans ce verrou, deux
+  -- débits concurrents liraient le même solde.
+  perform 1 from profiles where id = new.user_id for update;
+
   select coalesce(sum(delta), 0)
     into v_current
     from credit_transactions
@@ -123,6 +106,7 @@ create trigger trg_credit_transactions_balance_after
 create or replace function credit_transactions_sync_profile()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 declare
   v_user_id uuid;
@@ -152,6 +136,7 @@ create trigger trg_credit_transactions_sync_profile
 create or replace function generations_charge_on_success()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if new.status = 'success'
@@ -181,6 +166,7 @@ create trigger trg_generations_charge
 create or replace function payments_credit_on_success()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   if new.status = 'succeeded'

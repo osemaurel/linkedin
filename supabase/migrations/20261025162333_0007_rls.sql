@@ -4,10 +4,8 @@
 --   - credit_transactions, payments et generations : lecture seule côté client.
 --     L'écriture passe par les Edge Functions avec le service_role (qui
 --     contourne la RLS).
---   - profiles : lecture + mise à jour par le propriétaire ; credits_balance
---     est verrouillé par un trigger (voir 0006_functions.sql).
---   - audits : écriture réservée au service_role (lecture seule côté client)
---     puisqu'ils sont le résultat d'un appel IA tracé dans generations.
+--   - profiles : lecture + mise à jour par le propriétaire, limitée par droits
+--     de colonne : credits_balance n'est jamais modifiable côté client.
 
 -- ---------------------------------------------------------------------------
 -- Lecture seule côté client
@@ -30,23 +28,6 @@ create policy "generations_select_own"
   to authenticated
   using (auth.uid() = user_id);
 
-alter table audits enable row level security;
-create policy "audits_select_own"
-  on audits for select
-  to authenticated
-  using (auth.uid() = user_id);
-
-alter table audit_suggestions enable row level security;
-create policy "audit_suggestions_select_own"
-  on audit_suggestions for select
-  to authenticated
-  using (auth.uid() = user_id);
-create policy "audit_suggestions_update_applied"
-  on audit_suggestions for update
-  to authenticated
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
-
 -- ---------------------------------------------------------------------------
 -- profiles : lecture + update, pas de delete, pas d'insert
 -- (l'insertion se fait par handle_new_user)
@@ -62,9 +43,26 @@ create policy "profiles_update_own"
   using (auth.uid() = id)
   with check (auth.uid() = id);
 
+revoke insert, update, delete on profiles from anon, authenticated;
+grant update (full_name, country, objective) on profiles to authenticated;
+
 -- ---------------------------------------------------------------------------
 -- Tables CRUD complet par le propriétaire
 -- ---------------------------------------------------------------------------
+alter table audits enable row level security;
+create policy "audits_owner_all"
+  on audits for all
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+alter table audit_suggestions enable row level security;
+create policy "audit_suggestions_owner_all"
+  on audit_suggestions for all
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
 alter table strategic_profiles enable row level security;
 create policy "strategic_profiles_owner_all"
   on strategic_profiles for all
