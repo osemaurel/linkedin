@@ -669,6 +669,7 @@ export type Database = {
         | "carousel"
         | "image"
         | "outreach_message"
+        | "profile_parse"
       generation_status: "pending" | "success" | "failed"
       payment_provider: "moneyfusion" | "moneroo" | "pawapay" | "stripe"
       payment_status: "pending" | "succeeded" | "failed" | "refunded"
@@ -825,6 +826,7 @@ export const Constants = {
         "carousel",
         "image",
         "outreach_message",
+        "profile_parse",
       ],
       generation_status: ["pending", "success", "failed"],
       payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe"],

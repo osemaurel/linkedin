@@ -1,6 +1,11 @@
-import { useId, useState, type InputHTMLAttributes } from 'react';
+import { useId, useState, type InputHTMLAttributes, type TextareaHTMLAttributes } from 'react';
 
 type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> & {
+  label: string;
+  hint?: string;
+};
+
+type TextAreaFieldProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'id'> & {
   label: string;
   hint?: string;
 };
@@ -20,6 +25,29 @@ export function TextField({ label, hint, ...props }: FieldProps) {
         id={id}
         aria-describedby={hint ? hintId : undefined}
         className={inputClass}
+        {...props}
+      />
+      {hint && (
+        <p id={hintId} className="mt-1.5 text-xs text-slate-500">
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function TextAreaField({ label, hint, ...props }: TextAreaFieldProps) {
+  const id = useId();
+  const hintId = `${id}-hint`;
+  return (
+    <div>
+      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-slate-700">
+        {label}
+      </label>
+      <textarea
+        id={id}
+        aria-describedby={hint ? hintId : undefined}
+        className={`${inputClass} resize-y`}
         {...props}
       />
       {hint && (

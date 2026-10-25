@@ -1,0 +1,6 @@
+project_id = "linkedin"
+
+# La fonction vérifie elle-même le jeton de l'utilisateur (auth.getUser), ce qui
+# fonctionne aussi avec les nouvelles clés de signature JWT de Supabase.
+[functions.parse-profile]
+verify_jwt = false
