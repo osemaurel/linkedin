@@ -60,7 +60,7 @@ function CompletenessCard({
             <button
               type="button"
               onClick={() => onGo(next.tab)}
-              className="font-medium text-sky-700 hover:underline"
+              className="text-left font-medium text-sky-700 hover:underline"
             >
               {next.hint}
             </button>
