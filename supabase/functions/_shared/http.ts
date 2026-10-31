@@ -25,6 +25,16 @@ function json(status: number, body: unknown) {
   });
 }
 
+export async function readJson(req: Request): Promise<Record<string, unknown>> {
+  try {
+    const body = await req.json();
+    if (body && typeof body === 'object') return body;
+  } catch {
+    // corps absent ou invalide
+  }
+  throw new HttpError(400, 'bad_request');
+}
+
 /** POST authentifié : CORS, vérification du jeton, erreurs renvoyées en { error: code }. */
 export function serve(handler: (req: Request, auth: AuthContext) => Promise<unknown>) {
   Deno.serve(async (req) => {

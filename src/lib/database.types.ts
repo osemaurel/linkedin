@@ -96,6 +96,66 @@ export type Database = {
           },
         ]
       }
+      audit_questions: {
+        Row: {
+          answer: string | null
+          answered_at: string | null
+          audit_id: string
+          block: string
+          created_at: string
+          id: string
+          position: number
+          proof_id: string | null
+          proof_label: string
+          question: string
+          status: Database["public"]["Enums"]["question_status"]
+          user_id: string
+        }
+        Insert: {
+          answer?: string | null
+          answered_at?: string | null
+          audit_id: string
+          block: string
+          created_at?: string
+          id?: string
+          position?: number
+          proof_id?: string | null
+          proof_label: string
+          question: string
+          status?: Database["public"]["Enums"]["question_status"]
+          user_id: string
+        }
+        Update: {
+          answer?: string | null
+          answered_at?: string | null
+          audit_id?: string
+          block?: string
+          created_at?: string
+          id?: string
+          position?: number
+          proof_id?: string | null
+          proof_label?: string
+          question?: string
+          status?: Database["public"]["Enums"]["question_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_questions_audit_id_fkey"
+            columns: ["audit_id"]
+            isOneToOne: false
+            referencedRelation: "audits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_questions_proof_id_fkey"
+            columns: ["proof_id"]
+            isOneToOne: false
+            referencedRelation: "proofs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audits: {
         Row: {
           created_at: string
@@ -584,6 +644,7 @@ export type Database = {
           headline: string | null
           offer: string | null
           raw_source: Json | null
+          skills: string[]
           target_audience: string | null
           updated_at: string
           user_id: string
@@ -596,6 +657,7 @@ export type Database = {
           headline?: string | null
           offer?: string | null
           raw_source?: Json | null
+          skills?: string[]
           target_audience?: string | null
           updated_at?: string
           user_id: string
@@ -608,6 +670,7 @@ export type Database = {
           headline?: string | null
           offer?: string | null
           raw_source?: Json | null
+          skills?: string[]
           target_audience?: string | null
           updated_at?: string
           user_id?: string
@@ -687,6 +750,7 @@ export type Database = {
       post_format: "text" | "carousel" | "image"
       post_status: "draft" | "scheduled" | "published" | "archived"
       post_tone: "professional" | "conversational" | "direct"
+      question_status: "pending" | "answered" | "skipped"
       suggestion_impact: "low" | "medium" | "high"
       user_objective: "job" | "clients" | "visibility"
     }
@@ -845,6 +909,7 @@ export const Constants = {
       post_format: ["text", "carousel", "image"],
       post_status: ["draft", "scheduled", "published", "archived"],
       post_tone: ["professional", "conversational", "direct"],
+      question_status: ["pending", "answered", "skipped"],
       suggestion_impact: ["low", "medium", "high"],
       user_objective: ["job", "clients", "visibility"],
     },

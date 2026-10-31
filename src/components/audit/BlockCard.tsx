@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react';
 import { BLOCK_LABELS, IMPACT_LABELS, type Block, type BlockResult } from '@/lib/audit';
 import { CopyButton } from './CopyButton';
+import type { QuestionOutcome } from './QuestionPrompt';
 import { Delta, ScoreBadge } from './Score';
 
 type Props = {
@@ -7,6 +9,9 @@ type Props = {
   result: BlockResult;
   previous?: BlockResult;
   rewrites: { id: string; content: string }[];
+  /** Question de l'entretien progressif, affichée à l'endroit concerné. */
+  question?: ReactNode;
+  outcome?: QuestionOutcome;
 };
 
 const REWRITES_TITLE: Partial<Record<Block, string>> = {
@@ -14,11 +19,11 @@ const REWRITES_TITLE: Partial<Record<Block, string>> = {
   skills: 'Liste proposée',
 };
 
-export function BlockCard({ block, result, previous, rewrites }: Props) {
+export function BlockCard({ block, result, previous, rewrites, question, outcome }: Props) {
   return (
     <details
       id={`bloc-${block}`}
-      open={rewrites.length > 0}
+      open={rewrites.length > 0 || Boolean(question) || Boolean(outcome)}
       className="group scroll-mt-32 rounded-xl border border-slate-200 bg-white shadow-sm"
     >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 sm:p-5 [&::-webkit-details-marker]:hidden">
@@ -50,6 +55,21 @@ export function BlockCard({ block, result, previous, rewrites }: Props) {
         <p className="text-sm leading-relaxed text-slate-700">
           {result.diagnostic || 'Pas de remarque particulière sur ce bloc.'}
         </p>
+
+        {question && <div className="mt-4">{question}</div>}
+
+        {outcome && (
+          <p
+            role="status"
+            className={`mt-4 rounded-lg px-3 py-2 text-sm ${
+              outcome.kind === 'updated'
+                ? 'bg-emerald-50 text-emerald-800'
+                : 'bg-amber-50 text-amber-900'
+            }`}
+          >
+            {outcome.message}
+          </p>
+        )}
 
         {rewrites.length > 0 && (
           <div className="mt-4 space-y-3">

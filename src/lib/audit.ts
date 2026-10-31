@@ -117,3 +117,25 @@ export type RunAuditResult = {
 export function runAudit(): Promise<RunAuditResult> {
   return invokeFunction<RunAuditResult>('run-audit', {}, MESSAGES);
 }
+
+export type AuditQuestion = { id: string; block: Block; question: string };
+
+/** Codes pour lesquels la réponse est enregistrée mais les propositions n'ont pas bougé. */
+export const ANSWER_SAVED_CODES = ['llm_failed', 'llm_not_configured'];
+
+const QUESTION_MESSAGES: Record<string, string> = {
+  question_closed: 'Cette question a déjà une réponse.',
+  too_long: 'Une ligne suffit : raccourcis ta réponse.',
+  llm_failed:
+    'Ta réponse est enregistrée dans tes preuves, mais la mise à jour des propositions a échoué. Elle comptera au prochain audit.',
+  llm_not_configured:
+    'Ta réponse est enregistrée dans tes preuves. La mise à jour des propositions est momentanément indisponible.',
+};
+
+export function answerQuestion(questionId: string, answer: string) {
+  return invokeFunction<{ block: Block; rewrites: number }>(
+    'answer-question',
+    { question_id: questionId, answer },
+    QUESTION_MESSAGES,
+  );
+}
