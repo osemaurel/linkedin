@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { RequireAuth } from './components/RequireAuth';
+import { RequireOnboarding } from './components/RequireOnboarding';
 import Connexion from './pages/Connexion';
 import Inscription from './pages/Inscription';
 import Demarrer from './pages/Demarrer';
@@ -21,16 +22,18 @@ export default function App() {
       <Route path="inscription" element={<Inscription />} />
       <Route element={<RequireAuth />}>
         <Route element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="demarrer" element={<Demarrer />} />
-          <Route path="profil" element={<MonProfil />} />
-          <Route path="audit" element={<Audit />} />
-          <Route path="strategie" element={<Strategie />} />
-          <Route path="plan" element={<PlanEditorial />} />
-          <Route path="studio" element={<Studio />} />
-          <Route path="reseau" element={<MonReseau />} />
-          <Route path="compte" element={<Compte />} />
-          <Route path="*" element={<NotFound />} />
+          <Route element={<RequireOnboarding />}>
+            <Route index element={<Dashboard />} />
+            <Route path="demarrer" element={<Demarrer />} />
+            <Route path="profil" element={<MonProfil />} />
+            <Route path="audit" element={<Audit />} />
+            <Route path="strategie" element={<Strategie />} />
+            <Route path="plan" element={<PlanEditorial />} />
+            <Route path="studio" element={<Studio />} />
+            <Route path="reseau" element={<MonReseau />} />
+            <Route path="compte" element={<Compte />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Route>
       </Route>
     </Routes>
