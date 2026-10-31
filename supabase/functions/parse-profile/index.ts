@@ -1,7 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.118.0';
 import { extractText, getDocumentProxy } from 'npm:unpdf@1.9.1';
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
-import { admin, anonKey, HttpError, serve, supabaseUrl } from '../_shared/http.ts';
+import { admin, anonKey, HttpError, readJson, serve, supabaseUrl } from '../_shared/http.ts';
 import {
   EMPTY_PROFILE,
   normalizeProfile,
@@ -15,16 +15,6 @@ const MODEL = 'gpt-5.4-mini';
 const MAX_PDF_BYTES = 5 * 1024 * 1024;
 const MAX_TEXT_CHARS = 100_000;
 const MAX_PASTE_FIELD_CHARS = 20_000;
-
-async function readBody(req: Request): Promise<Record<string, unknown>> {
-  try {
-    const body = await req.json();
-    if (body && typeof body === 'object') return body;
-  } catch {
-    // corps absent ou invalide
-  }
-  throw new HttpError(400, 'bad_request');
-}
 
 async function readPdf(authHeader: string, userId: string, path: string): Promise<string> {
   if (!path.startsWith(`${userId}/`) || path.includes('..')) {
@@ -68,6 +58,8 @@ async function saveProfile(
       user_id: userId,
       headline: profile.headline,
       about: profile.about,
+      // Le collage ne demande pas les compétences : on garde celles déjà saisies.
+      ...(profile.skills.length ? { skills: profile.skills } : {}),
       raw_source: { ...rawSource, parsed: profile, parsed_at: new Date().toISOString() },
     },
     { onConflict: 'user_id' },
@@ -111,7 +103,7 @@ async function saveProfile(
 }
 
 serve(async (req, { userId, authHeader }) => {
-  const body = await readBody(req);
+  const body = await readJson(req);
   let text: string;
   let rawSource: Record<string, unknown>;
   let pasted: { headline: string | null; about: string | null } | null = null;

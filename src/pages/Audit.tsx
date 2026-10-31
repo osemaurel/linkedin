@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BlockCard } from '@/components/audit/BlockCard';
+import { QuestionPrompt, type QuestionOutcome } from '@/components/audit/QuestionPrompt';
 import { QuickWins } from '@/components/audit/QuickWins';
 import { RunAuditControl } from '@/components/audit/RunAuditControl';
 import { BigScore, Delta, ScoreBadge } from '@/components/audit/Score';
@@ -8,7 +10,7 @@ import { Spinner } from '@/components/Spinner';
 import { useAudits } from '@/hooks/useAudits';
 import { useOnboarding } from '@/hooks/useOnboarding';
 import { useProfile } from '@/hooks/useProfile';
-import { BLOCK_LABELS, BLOCKS, runAudit } from '@/lib/audit';
+import { BLOCK_LABELS, BLOCKS, runAudit, type Block } from '@/lib/audit';
 
 const dateFormat = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
 const card = 'rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6';
@@ -18,10 +20,12 @@ export default function Audit() {
   const audits = useAudits();
   const profile = useProfile();
   const queryClient = useQueryClient();
+  const [outcome, setOutcome] = useState<{ block: Block; outcome: QuestionOutcome } | null>(null);
 
   const run = useMutation({
     mutationFn: runAudit,
     onSuccess: async () => {
+      setOutcome(null);
       await queryClient.invalidateQueries({ queryKey: ['audits'] });
       void queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
@@ -85,7 +89,7 @@ export default function Audit() {
     );
   }
 
-  const { latest, previous, suggestions } = audits.data;
+  const { latest, previous, suggestions, question } = audits.data;
   const control = (
     <RunAuditControl
       hasAudit={latest !== null}
@@ -176,6 +180,16 @@ export default function Audit() {
               result={latest.blocks[block]}
               previous={previous?.blocks[block]}
               rewrites={suggestions.filter((s) => s.block === block)}
+              question={
+                question?.block === block ? (
+                  <QuestionPrompt
+                    key={question.id}
+                    question={question}
+                    onOutcome={(o) => setOutcome({ block, outcome: o })}
+                  />
+                ) : undefined
+              }
+              outcome={outcome?.block === block ? outcome.outcome : undefined}
             />
           ))}
         </div>
