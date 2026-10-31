@@ -9,8 +9,11 @@ import { BigScore, Delta, ScoreBadge } from '@/components/audit/Score';
 import { Spinner } from '@/components/Spinner';
 import { useAudits } from '@/hooks/useAudits';
 import { useOnboarding } from '@/hooks/useOnboarding';
+import { useActionCost } from '@/hooks/usePricing';
 import { useProfile } from '@/hooks/useProfile';
+import { useRecharge } from '@/hooks/useRecharge';
 import { BLOCK_LABELS, BLOCKS, runAudit, type Block } from '@/lib/audit';
+import { refreshCredits } from '@/lib/credits';
 
 const dateFormat = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeStyle: 'short' });
 const card = 'rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6';
@@ -19,6 +22,8 @@ export default function Audit() {
   const onboarding = useOnboarding();
   const audits = useAudits();
   const profile = useProfile();
+  const auditCost = useActionCost('audit');
+  const { canAfford, askRecharge, handleError } = useRecharge();
   const queryClient = useQueryClient();
   const [outcome, setOutcome] = useState<{ block: Block; outcome: QuestionOutcome } | null>(null);
 
@@ -26,10 +31,22 @@ export default function Audit() {
     mutationFn: runAudit,
     onSuccess: async () => {
       setOutcome(null);
+      refreshCredits(queryClient);
       await queryClient.invalidateQueries({ queryKey: ['audits'] });
-      void queryClient.invalidateQueries({ queryKey: ['profile'] });
+    },
+    onError: (error) => {
+      if (handleError(error, 'audit')) refreshCredits(queryClient);
     },
   });
+
+  function launchAudit() {
+    if (!canAfford('audit')) {
+      run.reset();
+      askRecharge('audit');
+      return;
+    }
+    run.mutate();
+  }
 
   if (onboarding.isPending || audits.isPending) {
     return (
@@ -93,10 +110,11 @@ export default function Audit() {
   const control = (
     <RunAuditControl
       hasAudit={latest !== null}
+      cost={auditCost}
       balance={profile.data?.credits_balance}
       pending={run.isPending}
       error={run.error}
-      onRun={() => run.mutate()}
+      onRun={launchAudit}
     />
   );
 

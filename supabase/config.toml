@@ -10,3 +10,6 @@ verify_jwt = false
 
 [functions.answer-question]
 verify_jwt = false
+
+[functions.pricing]
+verify_jwt = false

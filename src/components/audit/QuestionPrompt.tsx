@@ -1,7 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Spinner } from '@/components/Spinner';
+import { useActionCost } from '@/hooks/usePricing';
+import { useRecharge } from '@/hooks/useRecharge';
 import { ANSWER_SAVED_CODES, answerQuestion, type AuditQuestion } from '@/lib/audit';
+import { formatCost, refreshCredits } from '@/lib/credits';
 import { FunctionError } from '@/lib/edgeFunctions';
 import { supabase } from '@/lib/supabase';
 import { inputClass } from '@/lib/ui';
@@ -15,6 +18,8 @@ type Props = {
 
 export function QuestionPrompt({ question, onOutcome }: Props) {
   const queryClient = useQueryClient();
+  const cost = useActionCost('block_rewrite');
+  const { canAfford, askRecharge, handleError } = useRecharge();
   const [answer, setAnswer] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -26,12 +31,15 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
   const send = useMutation({
     mutationFn: () => answerQuestion(question.id, answer.trim()),
     onSuccess: async () => {
+      refreshCredits(queryClient);
       await refresh();
       onOutcome({ kind: 'updated', message: 'Propositions mises à jour avec ta réponse.' });
     },
     onError: async (e) => {
       const code = e instanceof FunctionError ? e.code : undefined;
-      if (code && ANSWER_SAVED_CODES.includes(code)) {
+      if (handleError(e, 'block_rewrite')) {
+        refreshCredits(queryClient);
+      } else if (code && ANSWER_SAVED_CODES.includes(code)) {
         await refresh();
         onOutcome({ kind: 'saved', message: e.message });
       } else {
@@ -56,6 +64,10 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
     event.preventDefault();
     if (!answer.trim()) return;
     setError(null);
+    if (!canAfford('block_rewrite')) {
+      askRecharge('block_rewrite');
+      return;
+    }
     send.mutate();
   }
 
@@ -88,6 +100,9 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
           {send.isPending
             ? 'On réécrit les propositions avec ta réponse…'
             : 'Ta réponse rejoint tes preuves et met à jour les propositions.'}
+          {!send.isPending && cost !== undefined && (
+            <span className="font-medium text-slate-700"> · {formatCost(cost)}</span>
+          )}
         </span>
         <button
           type="button"
