@@ -111,6 +111,12 @@ function cleanList(value: unknown): string[] {
   return value.map(clean).filter((v): v is string => v !== null);
 }
 
+/** Recolle les retours à la ligne de mise en page du PDF : fin de ligne sans
+ * ponctuation suivie d'une minuscule. Les vrais paragraphes et listes restent. */
+export function unwrap(value: string | null): string | null {
+  return value ? value.replace(/([^\n.!?:;])\n(?=[a-zà-ÿœæ])/g, '$1 ') : value;
+}
+
 /** Convertit YYYY, YYYY-MM ou YYYY-MM-DD en date Postgres ; null si invalide. */
 export function toDbDate(value: string | null): string | null {
   if (!value) return null;
@@ -134,7 +140,7 @@ export function normalizeProfile(raw: unknown): ParsedProfile {
       company: clean(e?.company),
       start_date: clean(e?.start_date),
       end_date: clean(e?.end_date),
-      description: clean(e?.description),
+      description: unwrap(clean(e?.description)),
     }))
     .filter((e): e is ParsedExperience => e.title !== null);
 
@@ -151,7 +157,7 @@ export function normalizeProfile(raw: unknown): ParsedProfile {
     full_name: clean(obj.full_name),
     headline: clean(obj.headline),
     country: clean(obj.country),
-    about: clean(obj.about),
+    about: unwrap(clean(obj.about)),
     experiences,
     skills: cleanList(obj.skills),
     education,
