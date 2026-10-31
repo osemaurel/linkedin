@@ -3,13 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { MENUS } from '@/lib/menus';
 import { supabase } from '@/lib/supabase';
 import { useProfile } from '@/hooks/useProfile';
+import { formatCredits } from '@/lib/credits';
 import { Logo } from './Logo';
-
-const numberFormat = new Intl.NumberFormat('fr-FR');
-
-function formatCredits(n: number) {
-  return `${numberFormat.format(n)} ${n > 1 ? 'crédits' : 'crédit'}`;
-}
 
 function signOut() {
   void supabase.auth.signOut();

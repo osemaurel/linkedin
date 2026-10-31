@@ -4,3 +4,6 @@ project_id = "linkedin"
 # fonctionne aussi avec les nouvelles clés de signature JWT de Supabase.
 [functions.parse-profile]
 verify_jwt = false
+
+[functions.run-audit]
+verify_jwt = false

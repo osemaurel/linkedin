@@ -1,5 +1,4 @@
-import { FunctionsHttpError } from '@supabase/supabase-js';
-import { supabase } from './supabase';
+import { invokeFunction } from './edgeFunctions';
 
 export type ParseProfileRequest =
   | { source: 'pdf'; path: string }
@@ -21,19 +20,6 @@ const MESSAGES: Record<string, string> = {
   llm_failed: 'La lecture de ton profil a échoué. Réessaie dans un instant.',
 };
 
-export async function parseProfile(body: ParseProfileRequest): Promise<ParseProfileResult> {
-  const { data, error } = await supabase.functions.invoke<ParseProfileResult>('parse-profile', {
-    body,
-  });
-  if (error || !data) {
-    let code: string | undefined;
-    if (error instanceof FunctionsHttpError) {
-      const payload = await error.context.json().catch(() => null);
-      code = payload?.error;
-    }
-    throw new Error(
-      (code && MESSAGES[code]) ?? 'Une erreur est survenue. Vérifie ta connexion et réessaie.',
-    );
-  }
-  return data;
+export function parseProfile(body: ParseProfileRequest): Promise<ParseProfileResult> {
+  return invokeFunction<ParseProfileResult>('parse-profile', body, MESSAGES);
 }

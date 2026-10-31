@@ -100,6 +100,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          quick_wins: Json
           score_global: number | null
           scores: Json
           user_id: string
@@ -107,6 +108,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          quick_wins?: Json
           score_global?: number | null
           scores?: Json
           user_id: string
@@ -114,6 +116,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          quick_wins?: Json
           score_global?: number | null
           scores?: Json
           user_id?: string
@@ -647,7 +650,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_credits: {
+        Args: {
+          p_generation_id: string
+          p_tokens_in?: number
+          p_tokens_out?: number
+        }
+        Returns: number
+      }
     }
     Enums: {
       asset_kind: "carousel" | "image"

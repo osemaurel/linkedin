@@ -1,7 +1,7 @@
-import Anthropic from 'npm:@anthropic-ai/sdk@1.3.0';
 import { createClient } from 'npm:@supabase/supabase-js@2.118.0';
-import { corsHeaders } from 'npm:@supabase/supabase-js@2.118.0/cors';
 import { extractText, getDocumentProxy } from 'npm:unpdf@1.9.1';
+import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
+import { admin, anonKey, HttpError, serve, supabaseUrl } from '../_shared/http.ts';
 import {
   EMPTY_PROFILE,
   normalizeProfile,
@@ -11,46 +11,18 @@ import {
   type ParsedProfile,
 } from './profile.ts';
 
-const MODEL = 'claude-opus-5-5';
+const MODEL = 'gpt-5.4-mini';
 const MAX_PDF_BYTES = 5 * 1024 * 1024;
 const MAX_TEXT_CHARS = 100_000;
 const MAX_PASTE_FIELD_CHARS = 20_000;
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-const admin = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
-
-class HttpError extends Error {
-  constructor(
-    readonly status: number,
-    readonly code: string,
-  ) {
-    super(code);
-  }
-}
-
-type PdfRequest = { source: 'pdf'; path: string };
-type PasteRequest = { source: 'paste'; headline?: unknown; about?: unknown; experiences?: unknown };
-
-function json(status: number, body: unknown) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
-
-async function readBody(req: Request): Promise<PdfRequest | PasteRequest> {
-  let body: unknown;
+async function readBody(req: Request): Promise<Record<string, unknown>> {
   try {
-    body = await req.json();
+    const body = await req.json();
+    if (body && typeof body === 'object') return body;
   } catch {
-    throw new HttpError(400, 'bad_request');
+    // corps absent ou invalide
   }
-  const b = body as Record<string, unknown> | null;
-  if (b?.source === 'pdf' && typeof b.path === 'string') return { source: 'pdf', path: b.path };
-  if (b?.source === 'paste') return b as PasteRequest;
   throw new HttpError(400, 'bad_request');
 }
 
@@ -72,7 +44,7 @@ async function readPdf(authHeader: string, userId: string, path: string): Promis
     const pdf = await getDocumentProxy(new Uint8Array(await file.arrayBuffer()));
     text = (await extractText(pdf, { mergePages: true })).text;
   } catch (err) {
-    console.error('parse-profile: lecture PDF impossible', err);
+    console.error('parse-profile : lecture PDF impossible', err);
     throw new HttpError(422, 'pdf_unreadable');
   }
   if (text.trim().length < 50) throw new HttpError(422, 'pdf_no_text');
@@ -84,64 +56,6 @@ function pastedField(value: unknown): string | null {
   const trimmed = value.trim();
   if (trimmed.length > MAX_PASTE_FIELD_CHARS) throw new HttpError(413, 'too_long');
   return trimmed === '' ? null : trimmed;
-}
-
-async function structureProfile(userId: string, text: string): Promise<ParsedProfile> {
-  if (text.length > MAX_TEXT_CHARS) throw new HttpError(413, 'too_long');
-  const apiKey = Deno.env.get('ANTHROPIC_API_KEY');
-  if (!apiKey) throw new HttpError(503, 'llm_not_configured');
-
-  const { data: generation, error } = await admin
-    .from('generations')
-    .insert({ user_id: userId, kind: 'profile_parse', cost_credits: 0 })
-    .select('id')
-    .single();
-  if (error) throw error;
-
-  const anthropic = new Anthropic({ apiKey, timeout: 60_000, maxRetries: 1 });
-  try {
-    const response = await anthropic.beta.messages.create({
-      model: MODEL,
-      max_tokens: 16000,
-      betas: ['server-side-fallback-2026-07-01'],
-      fallbacks: 'default',
-      output_config: {
-        effort: 'low',
-        format: { type: 'json_schema', schema: PROFILE_SCHEMA },
-      },
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: `<profil>\n${text}\n</profil>` }],
-    });
-    if (response.stop_reason !== 'end_turn') {
-      throw new Error(`stop_reason=${response.stop_reason}`);
-    }
-    const block = response.content.find(
-      (b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text',
-    );
-    if (!block) throw new Error('réponse sans texte');
-    const profile = normalizeProfile(JSON.parse(block.text));
-
-    const usage = response.usage;
-    await admin
-      .from('generations')
-      .update({
-        status: 'success',
-        tokens_in:
-          usage.input_tokens +
-          (usage.cache_creation_input_tokens ?? 0) +
-          (usage.cache_read_input_tokens ?? 0),
-        tokens_out: usage.output_tokens,
-      })
-      .eq('id', generation.id);
-    return profile;
-  } catch (err) {
-    console.error('parse-profile: échec du LLM', err);
-    await admin
-      .from('generations')
-      .update({ status: 'failed', error: String(err).slice(0, 500) })
-      .eq('id', generation.id);
-    throw new HttpError(502, 'llm_failed');
-  }
 }
 
 async function saveProfile(
@@ -196,51 +110,60 @@ async function saveProfile(
   }
 }
 
-Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json(405, { error: 'method_not_allowed' });
+serve(async (req, { userId, authHeader }) => {
+  const body = await readBody(req);
+  let text: string;
+  let rawSource: Record<string, unknown>;
+  let pasted: { headline: string | null; about: string | null } | null = null;
 
-  try {
-    const authHeader = req.headers.get('Authorization') ?? '';
-    const token = authHeader.replace(/^Bearer\s+/i, '');
-    if (!token) throw new HttpError(401, 'unauthorized');
-    const { data: auth, error: authError } = await admin.auth.getUser(token);
-    if (authError || !auth.user) throw new HttpError(401, 'unauthorized');
-    const userId = auth.user.id;
+  if (body.source === 'pdf' && typeof body.path === 'string') {
+    text = await readPdf(authHeader, userId, body.path);
+    rawSource = { source: 'pdf', storage_path: body.path, text };
+  } else if (body.source === 'paste') {
+    const headline = pastedField(body.headline);
+    const about = pastedField(body.about);
+    const experiences = pastedField(body.experiences);
+    if (!headline && !about && !experiences) throw new HttpError(400, 'empty_paste');
 
-    const body = await readBody(req);
-    let profile: ParsedProfile;
-    let rawSource: Record<string, unknown>;
+    text = [
+      headline && `Titre : ${headline}`,
+      about && `Infos :\n${about}`,
+      experiences && `Expérience :\n${experiences}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    rawSource = { source: 'paste', text };
+    pasted = { headline, about };
 
-    if (body.source === 'pdf') {
-      const text = await readPdf(authHeader, userId, body.path);
-      profile = await structureProfile(userId, text);
-      rawSource = { source: 'pdf', storage_path: body.path, text };
-    } else {
-      const headline = pastedField(body.headline);
-      const about = pastedField(body.about);
-      const experiences = pastedField(body.experiences);
-      if (!headline && !about && !experiences) throw new HttpError(400, 'empty_paste');
-
-      const text = [
-        headline && `Titre : ${headline}`,
-        about && `Infos :\n${about}`,
-        experiences && `Expérience :\n${experiences}`,
-      ]
-        .filter(Boolean)
-        .join('\n\n');
-      // Le titre et les infos collés sont gardés tels quels ; seul le bloc
-      // d'expériences, en texte libre, a besoin du LLM pour être découpé.
-      const parsed = experiences ? await structureProfile(userId, text) : EMPTY_PROFILE;
-      profile = { ...parsed, headline, about };
-      rawSource = { source: 'paste', text };
+    // Sans bloc d'expériences, rien à découper : pas d'appel au LLM.
+    if (!experiences) {
+      const profile = { ...EMPTY_PROFILE, headline, about };
+      await saveProfile(userId, profile, rawSource);
+      return { headline, experiences: 0 };
     }
-
-    await saveProfile(userId, profile, rawSource);
-    return json(200, { headline: profile.headline, experiences: profile.experiences.length });
-  } catch (err) {
-    if (err instanceof HttpError) return json(err.status, { error: err.code });
-    console.error('parse-profile: erreur inattendue', err);
-    return json(500, { error: 'internal' });
+  } else {
+    throw new HttpError(400, 'bad_request');
   }
+
+  if (text.length > MAX_TEXT_CHARS) throw new HttpError(413, 'too_long');
+  const client = openaiClient();
+
+  const { result: profile } = await tracked(userId, 'profile_parse', 0, async () => {
+    const { data, usage } = await generateJson(client, {
+      model: MODEL,
+      effort: 'low',
+      system: SYSTEM_PROMPT,
+      user: `<profil>\n${text}\n</profil>`,
+      schemaName: 'profil_linkedin',
+      schema: PROFILE_SCHEMA,
+    });
+    const parsed = normalizeProfile(data);
+    // Le titre et les infos collés sont gardés tels quels ; le LLM ne sert qu'à
+    // découper le bloc d'expériences, en texte libre.
+    const result = pasted ? { ...parsed, ...pasted } : parsed;
+    await saveProfile(userId, result, rawSource);
+    return { result, usage };
+  });
+
+  return { headline: profile.headline, experiences: profile.experiences.length };
 });
