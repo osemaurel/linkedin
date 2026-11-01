@@ -744,7 +744,12 @@ export type Database = {
         | "outreach_message"
         | "profile_parse"
       generation_status: "pending" | "success" | "failed"
-      payment_provider: "moneyfusion" | "moneroo" | "pawapay" | "stripe"
+      payment_provider:
+        | "moneyfusion"
+        | "moneroo"
+        | "pawapay"
+        | "stripe"
+        | "saspay"
       payment_status: "pending" | "succeeded" | "failed" | "refunded"
       plan_slot_status: "planned" | "drafted" | "published" | "skipped"
       post_format: "text" | "carousel" | "image"
@@ -903,7 +908,7 @@ export const Constants = {
         "profile_parse",
       ],
       generation_status: ["pending", "success", "failed"],
-      payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe"],
+      payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe", "saspay"],
       payment_status: ["pending", "succeeded", "failed", "refunded"],
       plan_slot_status: ["planned", "drafted", "published", "skipped"],
       post_format: ["text", "carousel", "image"],

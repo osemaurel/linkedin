@@ -16,9 +16,9 @@ export class HttpError extends Error {
   }
 }
 
-export type AuthContext = { userId: string; authHeader: string };
+export type AuthContext = { userId: string; email: string | null; authHeader: string };
 
-function json(status: number, body: unknown) {
+export function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -47,7 +47,10 @@ export function serve(handler: (req: Request, auth: AuthContext) => Promise<unkn
       if (!token) throw new HttpError(401, 'unauthorized');
       const { data, error } = await admin.auth.getUser(token);
       if (error || !data.user) throw new HttpError(401, 'unauthorized');
-      return json(200, await handler(req, { userId: data.user.id, authHeader }));
+      return json(
+        200,
+        await handler(req, { userId: data.user.id, email: data.user.email ?? null, authHeader }),
+      );
     } catch (err) {
       if (err instanceof HttpError) return json(err.status, { error: err.code });
       console.error('erreur inattendue', err);

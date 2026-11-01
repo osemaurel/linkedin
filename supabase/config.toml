@@ -13,3 +13,10 @@ verify_jwt = false
 
 [functions.pricing]
 verify_jwt = false
+
+[functions.create-payment]
+verify_jwt = false
+
+# Appelée par SasPay, sans jeton : la signature HMAC du webhook fait foi.
+[functions.payment-webhook]
+verify_jwt = false
