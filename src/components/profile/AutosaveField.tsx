@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef } from 'react';
 import { useAutosave, type SaveStatus } from '@/hooks/useAutosave';
 import { inputClass } from '@/lib/ui';
 
@@ -33,6 +33,8 @@ type Props = {
   maxLength?: number;
   showCount?: boolean;
   type?: 'text' | 'month';
+  /** Zone de texte qui grandit avec son contenu : tout reste lisible sans défiler dedans. */
+  autoGrow?: boolean;
 };
 
 /** Champ édité en place : enregistré 0,8 s après la dernière frappe, ou à la sortie du champ. */
@@ -48,9 +50,25 @@ export function AutosaveField({
   maxLength,
   showCount,
   type = 'text',
+  autoGrow = false,
 }: Props) {
   const id = useId();
   const { status, schedule, flush } = useAutosave(onSave);
+  const textarea = useRef<HTMLTextAreaElement>(null);
+
+  const fit = useCallback(() => {
+    const el = textarea.current;
+    if (!autoGrow || !el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight + el.offsetHeight - el.clientHeight}px`;
+  }, [autoGrow]);
+
+  useLayoutEffect(fit, [fit, value]);
+  useEffect(() => {
+    if (!autoGrow) return;
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, [autoGrow, fit]);
 
   function change(next: string) {
     onChange(next);
@@ -70,8 +88,9 @@ export function AutosaveField({
       {multiline ? (
         <textarea
           {...shared}
+          ref={textarea}
           rows={rows}
-          className={`${inputClass} resize-y`}
+          className={`${inputClass} ${autoGrow ? 'resize-none overflow-hidden' : 'resize-y'}`}
           onChange={(e) => change(e.target.value)}
         />
       ) : (

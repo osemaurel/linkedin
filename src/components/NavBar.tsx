@@ -1,10 +1,28 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { MENUS } from '@/lib/menus';
+import { MENUS, type MenuItem } from '@/lib/menus';
 import { supabase } from '@/lib/supabase';
 import { useProfile } from '@/hooks/useProfile';
 import { formatCredits } from '@/lib/credits';
 import { Logo } from './Logo';
+
+function SoonBadge() {
+  return (
+    <span className="ml-1.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-500">
+      Bientôt
+    </span>
+  );
+}
+
+/** Menu pas encore disponible : visible pour donner la feuille de route, mais inactif. */
+function SoonItem({ item, className }: { item: MenuItem; className: string }) {
+  return (
+    <span aria-disabled="true" className={`${className} cursor-default text-slate-400`}>
+      {item.label}
+      <SoonBadge />
+    </span>
+  );
+}
 
 function signOut() {
   void supabase.auth.signOut();
@@ -82,20 +100,27 @@ export function NavBar() {
         <ul className="mx-auto flex w-full max-w-6xl gap-1 overflow-x-auto px-4 sm:px-6">
           {MENUS.map((item) => (
             <li key={item.path} className="shrink-0">
-              <NavLink
-                to={item.path}
-                end={item.path === '/'}
-                className={({ isActive }) =>
-                  [
-                    'inline-flex h-11 items-center whitespace-nowrap border-b-2 px-3 text-sm font-medium transition-colors',
-                    isActive
-                      ? 'border-sky-600 text-sky-700'
-                      : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900',
-                  ].join(' ')
-                }
-              >
-                {item.label}
-              </NavLink>
+              {item.soon ? (
+                <SoonItem
+                  item={item}
+                  className="inline-flex h-11 items-center whitespace-nowrap border-b-2 border-transparent px-3 text-sm font-medium"
+                />
+              ) : (
+                <NavLink
+                  to={item.path}
+                  end={item.path === '/'}
+                  className={({ isActive }) =>
+                    [
+                      'inline-flex h-11 items-center whitespace-nowrap border-b-2 px-3 text-sm font-medium transition-colors',
+                      isActive
+                        ? 'border-sky-600 text-sky-700'
+                        : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900',
+                    ].join(' ')
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>
@@ -110,21 +135,28 @@ export function NavBar() {
           <ul className="mx-auto flex w-full max-w-6xl flex-col gap-0.5 px-2 py-2 sm:px-4">
             {MENUS.map((item) => (
               <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.path === '/'}
-                  onClick={close}
-                  className={({ isActive }) =>
-                    [
-                      'block rounded-md px-3 py-2.5 text-base font-medium transition-colors',
-                      isActive
-                        ? 'bg-sky-50 text-sky-700'
-                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
-                    ].join(' ')
-                  }
-                >
-                  {item.label}
-                </NavLink>
+                {item.soon ? (
+                  <SoonItem
+                    item={item}
+                    className="flex items-center rounded-md px-3 py-2.5 text-base font-medium"
+                  />
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    end={item.path === '/'}
+                    onClick={close}
+                    className={({ isActive }) =>
+                      [
+                        'block rounded-md px-3 py-2.5 text-base font-medium transition-colors',
+                        isActive
+                          ? 'bg-sky-50 text-sky-700'
+                          : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
+                      ].join(' ')
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                )}
               </li>
             ))}
           </ul>
