@@ -18,6 +18,7 @@ const MESSAGES: Record<string, string> = {
   llm_not_configured:
     'La lecture automatique est momentanément indisponible. Réessaie un peu plus tard.',
   llm_failed: 'La lecture de ton profil a échoué. Réessaie dans un instant.',
+  insufficient_credits: 'Ton solde ne couvre pas la lecture de ton profil.',
 };
 
 export function parseProfile(body: ParseProfileRequest): Promise<ParseProfileResult> {

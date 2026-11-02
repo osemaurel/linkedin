@@ -1,8 +1,11 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CostNote } from '@/components/credits/CostNote';
 import { FormError, SubmitButton, TextAreaField, TextField } from '@/components/fields';
 import { Spinner } from '@/components/Spinner';
 import { useAuth } from '@/hooks/useAuth';
+import { useRecharge } from '@/hooks/useRecharge';
+import { refreshCredits } from '@/lib/credits';
 import { parseProfile } from '@/lib/parseProfile';
 import { supabase } from '@/lib/supabase';
 
@@ -31,6 +34,7 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
   const { user } = useAuth();
   const userId = user?.id as string;
   const queryClient = useQueryClient();
+  const { canAfford, askRecharge, handleError } = useRecharge();
   const fileInput = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<'pdf' | 'paste'>('pdf');
   const [uploading, setUploading] = useState(false);
@@ -40,9 +44,15 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
   const [experiences, setExperiences] = useState('');
 
   async function finish() {
+    refreshCredits(queryClient);
     await queryClient.invalidateQueries({ queryKey: ['onboarding'] });
-    void queryClient.invalidateQueries({ queryKey: ['profile'] });
     onDone();
+  }
+
+  /** Solde insuffisant : écran de recharge ; toute autre erreur s'affiche sous le formulaire. */
+  function fail(e: Error) {
+    if (handleError(e, 'profile_parse')) refreshCredits(queryClient);
+    else setError(e.message);
   }
 
   const importPdf = useMutation({
@@ -59,7 +69,7 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
     onSuccess: finish,
     onError: (e) => {
       setUploading(false);
-      setError(e.message);
+      fail(e);
     },
   });
 
@@ -71,7 +81,7 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
       return parseProfile({ source: 'paste', headline, about, experiences });
     },
     onSuccess: finish,
-    onError: (e) => setError(e.message),
+    onError: fail,
   });
 
   const noAccount = useMutation({
@@ -100,12 +110,20 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
       return;
     }
     setError(null);
+    if (!canAfford('profile_parse')) {
+      askRecharge('profile_parse');
+      return;
+    }
     importPdf.mutate(file);
   }
 
   function handlePaste(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    if (!canAfford('profile_parse')) {
+      askRecharge('profile_parse');
+      return;
+    }
     importPaste.mutate();
   }
 
@@ -146,9 +164,12 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
         {importPaste.isPending && experiences.trim() && (
           <Pending title="Lecture de tes expériences…" />
         )}
-        <SubmitButton pending={importPaste.isPending}>
-          {importPaste.isPending ? 'Enregistrement…' : 'Continuer'}
-        </SubmitButton>
+        <div className="space-y-1.5">
+          <SubmitButton pending={importPaste.isPending}>
+            {importPaste.isPending ? 'Enregistrement…' : 'Continuer'}
+          </SubmitButton>
+          <CostNote kind="profile_parse" className="text-center" />
+        </div>
         <button
           type="button"
           onClick={() => switchMode('pdf')}
@@ -180,14 +201,17 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
             tabIndex={-1}
             aria-hidden="true"
           />
-          <button
-            type="button"
-            onClick={() => fileInput.current?.click()}
-            disabled={busy}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            Choisir mon PDF LinkedIn
-          </button>
+          <div className="space-y-1.5">
+            <button
+              type="button"
+              onClick={() => fileInput.current?.click()}
+              disabled={busy}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              Choisir mon PDF LinkedIn
+            </button>
+            <CostNote kind="profile_parse" className="text-center" />
+          </div>
         </>
       )}
 

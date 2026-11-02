@@ -8,11 +8,10 @@ import {
   type Impact,
 } from '../_shared/audit.ts';
 import { admin, HttpError, readJson, serve } from '../_shared/http.ts';
+import { COSTS } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
-// Répondre ne coûte rien : la réponse enrichit le profil, l'utilisateur ne doit pas hésiter.
-const REFRESH_COST = 0;
 const MAX_ANSWER_CHARS = 300;
 
 async function replaceSuggestions(
@@ -98,29 +97,34 @@ serve(async (req, { userId }) => {
   ];
   const client = openaiClient();
 
-  const { result: count } = await tracked(userId, 'block_rewrite', REFRESH_COST, async () => {
-    const { data, usage } = await generateJson(client, {
-      model: MODEL,
-      effort: 'low',
-      system: REWRITE_SYSTEM_PROMPT,
-      user: buildRewriteInput(input, block, current?.diagnostic ?? '', {
-        question: question.question,
-        answer,
-      }),
-      schemaName: 'reecritures_bloc',
-      schema: REWRITE_SCHEMA,
-    });
-    const rewrites = normalizeRewrites(data, block);
-    if (!rewrites.length) throw new Error('aucune réécriture');
-    await replaceSuggestions(
-      userId,
-      question.audit_id,
-      block,
-      current?.impact ?? 'medium',
-      rewrites,
-    );
-    return { result: rewrites.length, usage };
-  });
+  const { result: count } = await tracked(
+    userId,
+    'block_rewrite',
+    COSTS.block_rewrite,
+    async () => {
+      const { data, usage } = await generateJson(client, {
+        model: MODEL,
+        effort: 'low',
+        system: REWRITE_SYSTEM_PROMPT,
+        user: buildRewriteInput(input, block, current?.diagnostic ?? '', {
+          question: question.question,
+          answer,
+        }),
+        schemaName: 'reecritures_bloc',
+        schema: REWRITE_SCHEMA,
+      });
+      const rewrites = normalizeRewrites(data, block);
+      if (!rewrites.length) throw new Error('aucune réécriture');
+      await replaceSuggestions(
+        userId,
+        question.audit_id,
+        block,
+        current?.impact ?? 'medium',
+        rewrites,
+      );
+      return { result: rewrites.length, usage };
+    },
+  );
 
   return { block, rewrites: count, proof_id: proof.id };
 });

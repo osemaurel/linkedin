@@ -13,6 +13,7 @@ import PlanEditorial from './pages/PlanEditorial';
 import Studio from './pages/Studio';
 import MonReseau from './pages/MonReseau';
 import Compte from './pages/Compte';
+import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="studio" element={<Studio />} />
             <Route path="reseau" element={<MonReseau />} />
             <Route path="compte" element={<Compte />} />
+            <Route path="paiement/:id" element={<Paiement />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Route>

@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.118.0';
 import { extractText, getDocumentProxy } from 'npm:unpdf@1.9.1';
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
 import { admin, anonKey, HttpError, readJson, serve, supabaseUrl } from '../_shared/http.ts';
+import { COSTS } from '../_shared/pricing.ts';
 import {
   EMPTY_PROFILE,
   normalizeProfile,
@@ -140,22 +141,27 @@ serve(async (req, { userId, authHeader }) => {
   if (text.length > MAX_TEXT_CHARS) throw new HttpError(413, 'too_long');
   const client = openaiClient();
 
-  const { result: profile } = await tracked(userId, 'profile_parse', 0, async () => {
-    const { data, usage } = await generateJson(client, {
-      model: MODEL,
-      effort: 'low',
-      system: SYSTEM_PROMPT,
-      user: `<profil>\n${text}\n</profil>`,
-      schemaName: 'profil_linkedin',
-      schema: PROFILE_SCHEMA,
-    });
-    const parsed = normalizeProfile(data);
-    // Le titre et les infos collés sont gardés tels quels ; le LLM ne sert qu'à
-    // découper le bloc d'expériences, en texte libre.
-    const result = pasted ? { ...parsed, ...pasted } : parsed;
-    await saveProfile(userId, result, rawSource);
-    return { result, usage };
-  });
+  const { result: profile } = await tracked(
+    userId,
+    'profile_parse',
+    COSTS.profile_parse,
+    async () => {
+      const { data, usage } = await generateJson(client, {
+        model: MODEL,
+        effort: 'low',
+        system: SYSTEM_PROMPT,
+        user: `<profil>\n${text}\n</profil>`,
+        schemaName: 'profil_linkedin',
+        schema: PROFILE_SCHEMA,
+      });
+      const parsed = normalizeProfile(data);
+      // Le titre et les infos collés sont gardés tels quels ; le LLM ne sert qu'à
+      // découper le bloc d'expériences, en texte libre.
+      const result = pasted ? { ...parsed, ...pasted } : parsed;
+      await saveProfile(userId, result, rawSource);
+      return { result, usage };
+    },
+  );
 
   return { headline: profile.headline, experiences: profile.experiences.length };
 });

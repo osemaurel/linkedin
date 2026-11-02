@@ -7,11 +7,10 @@ import {
   type AuditResult,
 } from '../_shared/audit.ts';
 import { admin, HttpError, serve } from '../_shared/http.ts';
+import { COSTS } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
-// Doit rester égal à AUDIT_COST côté application (src/lib/audit.ts).
-const AUDIT_COST = 5;
 
 async function ensureNoAuditRunning(userId: string) {
   const since = new Date(Date.now() - 3 * 60_000).toISOString();
@@ -78,14 +77,14 @@ async function saveAudit(userId: string, audit: AuditResult): Promise<string> {
 
 serve(async (_req, { userId }) => {
   const { input, balance } = await loadProfileInput(userId);
-  if (balance < AUDIT_COST) throw new HttpError(402, 'insufficient_credits');
+  if (balance < COSTS.audit) throw new HttpError(402, 'insufficient_credits');
   await ensureNoAuditRunning(userId);
   const client = openaiClient();
 
   const { result, balance: creditsBalance } = await tracked(
     userId,
     'audit',
-    AUDIT_COST,
+    COSTS.audit,
     async () => {
       const { data, usage } = await generateJson(client, {
         model: MODEL,

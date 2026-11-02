@@ -1,9 +1,6 @@
 import type { Json } from './database.types';
 import { invokeFunction } from './edgeFunctions';
 
-// Doit rester égal à AUDIT_COST dans supabase/functions/run-audit/index.ts.
-export const AUDIT_COST = 5;
-
 export const BLOCKS = [
   'photo',
   'banner',
@@ -101,7 +98,7 @@ export function parseAudit(row: AuditRow): Audit {
 }
 
 const MESSAGES: Record<string, string> = {
-  insufficient_credits: `Il te faut ${AUDIT_COST} crédits pour lancer un audit.`,
+  insufficient_credits: 'Ton solde ne couvre pas un audit.',
   audit_running: 'Un audit est déjà en cours. Patiente une minute avant de relancer.',
   profile_missing: 'Commence par présenter ton profil pour lancer ton audit.',
   llm_not_configured: 'L’audit est momentanément indisponible. Réessaie un peu plus tard.',
@@ -124,6 +121,7 @@ export type AuditQuestion = { id: string; block: Block; question: string };
 export const ANSWER_SAVED_CODES = ['llm_failed', 'llm_not_configured'];
 
 const QUESTION_MESSAGES: Record<string, string> = {
+  insufficient_credits: 'Ton solde ne couvre pas la mise à jour des propositions.',
   question_closed: 'Cette question a déjà une réponse.',
   too_long: 'Une ligne suffit : raccourcis ta réponse.',
   llm_failed:

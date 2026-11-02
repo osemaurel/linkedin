@@ -55,6 +55,7 @@ export async function generateJson(
 /**
  * Trace un appel IA dans generations : ligne insérée AVANT l'appel, consume_credits
  * (qui débite cost_credits) seulement si `run` réussit en entier, statut failed sinon.
+ * Un solde qui ne couvre pas `cost` répond 402 insufficient_credits, sans appeler l'IA.
  */
 export async function tracked<T>(
   userId: string,
@@ -62,6 +63,16 @@ export async function tracked<T>(
   cost: number,
   run: () => Promise<{ result: T; usage: Usage }>,
 ): Promise<{ result: T; balance: number }> {
+  if (cost > 0) {
+    const { data: profile, error: balanceError } = await admin
+      .from('profiles')
+      .select('credits_balance')
+      .eq('id', userId)
+      .single();
+    if (balanceError) throw balanceError;
+    if (profile.credits_balance < cost) throw new HttpError(402, 'insufficient_credits');
+  }
+
   const { data: generation, error } = await admin
     .from('generations')
     .insert({ user_id: userId, kind, cost_credits: cost })
