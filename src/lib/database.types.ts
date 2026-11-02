@@ -643,6 +643,7 @@ export type Database = {
           created_at: string
           headline: string | null
           offer: string | null
+          positioning: string | null
           raw_source: Json | null
           skills: string[]
           target_audience: string | null
@@ -656,6 +657,7 @@ export type Database = {
           created_at?: string
           headline?: string | null
           offer?: string | null
+          positioning?: string | null
           raw_source?: Json | null
           skills?: string[]
           target_audience?: string | null
@@ -669,6 +671,7 @@ export type Database = {
           created_at?: string
           headline?: string | null
           offer?: string | null
+          positioning?: string | null
           raw_source?: Json | null
           skills?: string[]
           target_audience?: string | null
