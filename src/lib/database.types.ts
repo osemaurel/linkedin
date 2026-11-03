@@ -747,6 +747,8 @@ export type Database = {
         | "outreach_message"
         | "profile_parse"
         | "plan_slot"
+        | "post_refine"
+        | "voice_profile"
       generation_status: "pending" | "success" | "failed"
       payment_provider:
         | "moneyfusion"
@@ -911,6 +913,8 @@ export const Constants = {
         "outreach_message",
         "profile_parse",
         "plan_slot",
+        "post_refine",
+        "voice_profile",
       ],
       generation_status: ["pending", "success", "failed"],
       payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe", "saspay"],

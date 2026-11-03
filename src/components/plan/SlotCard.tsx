@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AutosaveField } from '@/components/profile/AutosaveField';
 import { Spinner } from '@/components/Spinner';
@@ -176,6 +177,12 @@ export function SlotCard({ slot, pillars, onChange, defaultOpen = false }: Props
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-1">
+        <Link
+          to={slot.postId ? `/studio?post=${slot.postId}` : `/studio?slot=${slot.id}`}
+          className={smallButton}
+        >
+          {slot.postId ? 'Voir le post' : 'Rédiger dans le Studio'}
+        </Link>
         <button type="button" onClick={() => setOpen((o) => !o)} className={smallButton}>
           {open ? 'Fermer' : 'Modifier'}
         </button>

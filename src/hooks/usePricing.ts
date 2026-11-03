@@ -2,7 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { invokeFunction } from '@/lib/edgeFunctions';
 
 export type PricedAction =
-  'audit' | 'block_rewrite' | 'profile_parse' | 'pillars' | 'content_plan' | 'plan_slot';
+  | 'audit'
+  | 'block_rewrite'
+  | 'profile_parse'
+  | 'pillars'
+  | 'content_plan'
+  | 'plan_slot'
+  | 'post'
+  | 'post_refine'
+  | 'voice_profile';
 export type Pack = { id: string; name: string; credits: number; price: number; currency: string };
 export type PricedActionInfo = { kind: PricedAction; label: string; cost: number };
 export type Pricing = { actions: PricedActionInfo[]; packs: Pack[] };
