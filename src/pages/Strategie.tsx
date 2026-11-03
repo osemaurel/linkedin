@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AutosaveField } from '@/components/profile/AutosaveField';
 import { Spinner } from '@/components/Spinner';
@@ -180,10 +181,19 @@ function StrategyEditor({
         </div>
       </section>
 
-      <p className="text-sm text-slate-500">
-        Prochaine étape : ces piliers nourriront ton plan éditorial et le Studio, bientôt
-        disponibles.
-      </p>
+      <section
+        className={`${card} flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between`}
+      >
+        <p className="text-sm text-slate-600">
+          Prochaine étape : répartir ces piliers sur ton calendrier de publication.
+        </p>
+        <Link
+          to="/plan"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Voir mon plan éditorial
+        </Link>
+      </section>
     </>
   );
 }

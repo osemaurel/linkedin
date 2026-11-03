@@ -11,7 +11,7 @@ export const MENUS: readonly MenuItem[] = [
   { path: '/profil', label: 'Mon profil', short: 'Profil' },
   { path: '/audit', label: 'Audit & optimisation', short: 'Audit' },
   { path: '/strategie', label: 'Stratégie de contenu', short: 'Stratégie' },
-  { path: '/plan', label: 'Plan éditorial', short: 'Plan', soon: true },
+  { path: '/plan', label: 'Plan éditorial', short: 'Plan' },
   { path: '/studio', label: 'Studio', short: 'Studio', soon: true },
   { path: '/reseau', label: 'Mon réseau', short: 'Réseau', soon: true },
   { path: '/compte', label: 'Compte', short: 'Compte' },

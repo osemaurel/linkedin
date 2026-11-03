@@ -7,6 +7,8 @@ export const COSTS = {
   block_rewrite: 0,
   profile_parse: 0,
   pillars: 2,
+  content_plan: 3,
+  plan_slot: 0,
 } as const;
 
 export type PricedAction = keyof typeof COSTS;
@@ -20,6 +22,8 @@ export const ACTIONS: { kind: PricedAction; label: string; cost: number }[] = [
   },
   { kind: 'profile_parse', label: 'Lecture de ton profil LinkedIn', cost: COSTS.profile_parse },
   { kind: 'pillars', label: 'Proposition de stratégie de contenu', cost: COSTS.pillars },
+  { kind: 'content_plan', label: 'Plan éditorial', cost: COSTS.content_plan },
+  { kind: 'plan_slot', label: 'Nouvel angle pour un créneau', cost: COSTS.plan_slot },
 ];
 
 // Montants provisoires : le prix des packs reste à fixer (voir le cadrage, « Monétisation »).
