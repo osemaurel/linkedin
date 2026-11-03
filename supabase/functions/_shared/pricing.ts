@@ -12,6 +12,8 @@ export const COSTS = {
   post: 1,
   post_refine: 0,
   voice_profile: 0,
+  targeting: 1,
+  outreach_message: 1,
 } as const;
 
 export type PricedAction = keyof typeof COSTS;
@@ -30,6 +32,8 @@ export const ACTIONS: { kind: PricedAction; label: string; cost: number }[] = [
   { kind: 'post', label: 'Rédaction d’un post', cost: COSTS.post },
   { kind: 'post_refine', label: 'Retouche d’un post', cost: COSTS.post_refine },
   { kind: 'voice_profile', label: 'Apprentissage de ta voix', cost: COSTS.voice_profile },
+  { kind: 'targeting', label: 'Ciblage et recherches LinkedIn', cost: COSTS.targeting },
+  { kind: 'outreach_message', label: 'Messages d’approche', cost: COSTS.outreach_message },
 ];
 
 // Montants provisoires : le prix des packs reste à fixer (voir le cadrage, « Monétisation »).

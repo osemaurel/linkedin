@@ -13,6 +13,6 @@ export const MENUS: readonly MenuItem[] = [
   { path: '/strategie', label: 'Stratégie de contenu', short: 'Stratégie' },
   { path: '/plan', label: 'Plan éditorial', short: 'Plan' },
   { path: '/studio', label: 'Studio', short: 'Studio' },
-  { path: '/reseau', label: 'Mon réseau', short: 'Réseau', soon: true },
+  { path: '/reseau', label: 'Mon réseau', short: 'Réseau' },
   { path: '/compte', label: 'Compte', short: 'Compte' },
 ] as const;
