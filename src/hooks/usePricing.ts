@@ -12,7 +12,9 @@ export type PricedAction =
   | 'post_refine'
   | 'voice_profile'
   | 'targeting'
-  | 'outreach_message';
+  | 'outreach_message'
+  | 'carousel'
+  | 'image';
 export type Pack = { id: string; name: string; credits: number; price: number; currency: string };
 export type PricedActionInfo = { kind: PricedAction; label: string; cost: number };
 export type Pricing = { actions: PricedActionInfo[]; packs: Pack[] };

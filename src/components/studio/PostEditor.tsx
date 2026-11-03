@@ -16,6 +16,7 @@ import {
   type StudioPost,
 } from '@/lib/studio';
 import { inputClass } from '@/lib/ui';
+import { VisualPanel } from './VisualPanel';
 
 type Props = {
   post: StudioPost;
@@ -98,8 +99,8 @@ export function PostEditor({ post, onChange, onDelete }: Props) {
 
       {post.slot && post.slot.format !== 'text' && (
         <p className="rounded-lg bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
-          Le visuel ({FORMAT_LABELS[post.slot.format].toLowerCase()}) arrive bientôt dans le Studio
-          : voici déjà le texte qui l’accompagnera.
+          Le format prévu est {post.slot.format === 'image' ? 'une image' : 'un carrousel'} :
+          prépare-le dans la partie Visuel, sous le post.
         </p>
       )}
 
@@ -171,6 +172,8 @@ export function PostEditor({ post, onChange, onDelete }: Props) {
           <p className="mt-1.5 text-xs text-slate-500">Coût : {formatCost(cost)}</p>
         )}
       </form>
+
+      <VisualPanel postId={post.id} plannedFormat={post.slot?.format ?? null} />
 
       {error && (
         <p role="alert" className="text-sm text-red-700">
