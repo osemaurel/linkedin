@@ -24,6 +24,8 @@ export type PlanSlot = {
   pillarId: string | null;
   format: Format;
   angle: string;
+  /** Post rédigé dans le Studio pour ce créneau. */
+  postId: string | null;
 };
 export type PlanPillar = { id: string; name: string };
 export type PlanData = {
@@ -58,7 +60,7 @@ export async function fetchPlan(userId: string): Promise<PlanData> {
   if (plan) {
     const { data, error } = await supabase
       .from('plan_slots')
-      .select('id, scheduled_date, pillar_id, format, angle')
+      .select('id, scheduled_date, pillar_id, format, angle, post_id')
       .eq('plan_id', plan.id)
       .order('scheduled_date')
       .order('created_at');
@@ -69,6 +71,7 @@ export async function fetchPlan(userId: string): Promise<PlanData> {
       pillarId: s.pillar_id,
       format: s.format,
       angle: s.angle ?? '',
+      postId: s.post_id,
     }));
   }
   return {

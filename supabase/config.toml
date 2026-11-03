@@ -29,3 +29,12 @@ verify_jwt = false
 
 [functions.regenerate-slot]
 verify_jwt = false
+
+[functions.write-post]
+verify_jwt = false
+
+[functions.refine-post]
+verify_jwt = false
+
+[functions.learn-voice]
+verify_jwt = false

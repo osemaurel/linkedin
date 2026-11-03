@@ -262,7 +262,8 @@ function PlanEditor({
       </section>
 
       <p className="text-sm text-slate-500">
-        Prochaine étape : rédiger chaque publication dans le Studio, bientôt disponible.
+        Prochaine étape : rédiger chaque publication avec « Rédiger dans le Studio », sur son
+        créneau.
       </p>
     </>
   );
