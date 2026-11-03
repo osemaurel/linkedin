@@ -749,6 +749,7 @@ export type Database = {
         | "plan_slot"
         | "post_refine"
         | "voice_profile"
+        | "targeting"
       generation_status: "pending" | "success" | "failed"
       payment_provider:
         | "moneyfusion"
@@ -915,6 +916,7 @@ export const Constants = {
         "plan_slot",
         "post_refine",
         "voice_profile",
+        "targeting",
       ],
       generation_status: ["pending", "success", "failed"],
       payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe", "saspay"],
