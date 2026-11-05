@@ -15,7 +15,7 @@ export function Logo({ inverted = false, compact = false }: Props) {
       <span
         aria-hidden="true"
         className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-sm font-bold shadow-sm ${
-          inverted ? 'bg-white text-blue-700' : 'bg-blue-700 text-white'
+          inverted ? 'bg-white text-sky-700' : 'bg-sky-600 text-white'
         }`}
       >
         in

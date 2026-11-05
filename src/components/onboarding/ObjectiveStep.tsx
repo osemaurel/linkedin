@@ -48,8 +48,8 @@ export function ObjectiveStep({ value, onDone }: Props) {
               className={[
                 'flex w-full items-center justify-between gap-3 rounded-lg border px-4 py-3.5 text-left transition-colors disabled:cursor-not-allowed',
                 selected
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-slate-200 hover:border-blue-300 hover:bg-slate-50',
+                  ? 'border-sky-500 bg-sky-50'
+                  : 'border-slate-200 hover:border-sky-300 hover:bg-slate-50',
               ].join(' ')}
             >
               <span>
@@ -57,7 +57,7 @@ export function ObjectiveStep({ value, onDone }: Props) {
                 <span className="mt-0.5 block text-sm text-slate-600">{o.description}</span>
               </span>
               {save.isPending && save.variables === o.value ? (
-                <Spinner className="h-4 w-4 text-blue-600" />
+                <Spinner className="h-4 w-4 text-sky-600" />
               ) : (
                 <svg
                   viewBox="0 0 20 20"

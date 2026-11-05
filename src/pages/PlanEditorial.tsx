@@ -67,7 +67,7 @@ function Choice<T extends number>({
             onClick={() => onChange(o)}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               o === value
-                ? 'bg-white text-blue-700 shadow-sm'
+                ? 'bg-white text-sky-700 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -147,7 +147,7 @@ function CreatePlan({
           type="button"
           onClick={start}
           disabled={create.isPending}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {create.isPending && <Spinner />}
           {create.isPending
@@ -237,7 +237,7 @@ function PlanEditor({
               onClick={() => setView(v)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium ${
                 view === v
-                  ? 'bg-white text-blue-700 shadow-sm'
+                  ? 'bg-white text-sky-700 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -294,7 +294,7 @@ export default function PlanEditorial() {
   let body;
   if (plan.isPending) {
     body = (
-      <div className="grid place-items-center py-16 text-blue-600" role="status">
+      <div className="grid place-items-center py-16 text-sky-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>
@@ -322,7 +322,7 @@ export default function PlanEditorial() {
         </p>
         <Link
           to="/strategie"
-          className="mt-4 inline-flex items-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+          className="mt-4 inline-flex items-center rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700"
         >
           Définir ma stratégie
         </Link>

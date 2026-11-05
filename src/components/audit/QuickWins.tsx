@@ -1,8 +1,8 @@
 import { BLOCK_LABELS, IMPACT_LABELS, type Impact, type QuickWin } from '@/lib/audit';
 
 const IMPACT_TONE: Record<Impact, string> = {
-  high: 'bg-blue-600 text-white',
-  medium: 'bg-blue-100 text-blue-800',
+  high: 'bg-sky-600 text-white',
+  medium: 'bg-sky-100 text-sky-800',
   low: 'bg-slate-100 text-slate-600',
 };
 
@@ -27,7 +27,7 @@ export function QuickWins({ wins }: { wins: QuickWin[] }) {
             <div className="min-w-0">
               <p className="text-sm text-slate-900">{w.action}</p>
               <p className="mt-1 text-xs text-slate-500">
-                <a href={`#bloc-${w.block}`} className="hover:text-blue-700 hover:underline">
+                <a href={`#bloc-${w.block}`} className="hover:text-sky-700 hover:underline">
                   {BLOCK_LABELS[w.block]}
                 </a>{' '}
                 · {IMPACT_LABELS[w.impact]}

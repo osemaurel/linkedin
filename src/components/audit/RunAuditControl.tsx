@@ -13,7 +13,7 @@ type Props = {
   onRun: () => void;
 };
 
-const linkClass = 'font-medium text-blue-700 underline hover:text-blue-800';
+const linkClass = 'font-medium text-sky-700 underline hover:text-sky-800';
 
 export function RunAuditControl({ hasAudit, cost, balance, pending, error, onRun }: Props) {
   const code = error instanceof FunctionError ? error.code : undefined;
@@ -26,7 +26,7 @@ export function RunAuditControl({ hasAudit, cost, balance, pending, error, onRun
         type="button"
         onClick={onRun}
         disabled={pending}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending && <Spinner />}
         {pending ? 'Analyse en cours…' : hasAudit ? 'Relancer l’audit' : 'Lancer mon audit'}

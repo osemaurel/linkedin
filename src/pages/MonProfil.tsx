@@ -49,7 +49,7 @@ function CompletenessCard({
         className="mt-2 h-2 rounded-full bg-slate-100"
       >
         <div
-          className="h-2 rounded-full bg-blue-600 transition-[width]"
+          className="h-2 rounded-full bg-sky-600 transition-[width]"
           style={{ width: `${percent}%` }}
         />
       </div>
@@ -60,7 +60,7 @@ function CompletenessCard({
             <button
               type="button"
               onClick={() => onGo(next.tab)}
-              className="text-left font-medium text-blue-700 hover:underline"
+              className="text-left font-medium text-sky-700 hover:underline"
             >
               {next.hint}
             </button>
@@ -104,8 +104,8 @@ function ObjectivePicker({
             className={[
               'rounded-lg border px-3 py-2.5 text-left text-sm font-medium transition-colors',
               value === o.value
-                ? 'border-blue-500 bg-blue-50 text-blue-800'
-                : 'border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-slate-50',
+                ? 'border-sky-500 bg-sky-50 text-sky-800'
+                : 'border-slate-200 text-slate-700 hover:border-sky-300 hover:bg-slate-50',
             ].join(' ')}
           >
             {o.label}
@@ -183,7 +183,7 @@ function ProfileEditor({ initial }: { initial: FullProfile }) {
               className={[
                 'inline-flex h-11 shrink-0 items-center whitespace-nowrap border-b-2 px-3 text-sm font-medium transition-colors',
                 tab === t.id
-                  ? 'border-blue-600 text-blue-700'
+                  ? 'border-sky-600 text-sky-700'
                   : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900',
               ].join(' ')}
             >
@@ -237,7 +237,7 @@ function ProfileEditor({ initial }: { initial: FullProfile }) {
               />
               <p className="text-sm text-slate-600">
                 Ton profil LinkedIn a changé ?{' '}
-                <Link to="/demarrer" className="font-medium text-blue-700 hover:underline">
+                <Link to="/demarrer" className="font-medium text-sky-700 hover:underline">
                   Importe-le à nouveau
                 </Link>
               </p>
@@ -305,7 +305,7 @@ export default function MonProfil() {
 
   if (isPending) {
     return (
-      <div className="grid place-items-center py-24 text-blue-600" role="status">
+      <div className="grid place-items-center py-24 text-sky-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>

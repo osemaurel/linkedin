@@ -52,7 +52,7 @@ export function VoicePanel({ voice, onLearned }: { voice: Voice; onLearned: () =
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="font-medium text-blue-700 underline hover:text-blue-800"
+          className="font-medium text-sky-700 underline hover:text-sky-800"
         >
           {learned ? 'Mettre à jour ma voix' : 'Montrer mes posts'}
         </button>
@@ -96,7 +96,7 @@ export function VoicePanel({ voice, onLearned }: { voice: Voice; onLearned: () =
         <button
           type="button"
           onClick={() => setSource((s) => (s === 'posts' ? 'sample' : 'posts'))}
-          className="font-medium text-blue-700 hover:underline"
+          className="font-medium text-sky-700 hover:underline"
         >
           {source === 'posts' ? 'Je n’ai jamais posté' : 'J’ai d’anciens posts'}
         </button>
@@ -110,7 +110,7 @@ export function VoicePanel({ voice, onLearned }: { voice: Voice; onLearned: () =
         <button
           type="submit"
           disabled={!enough || learn.isPending}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {learn.isPending && <Spinner />}
           {learn.isPending ? 'Analyse…' : 'Apprendre ma voix'}

@@ -13,18 +13,18 @@ const MAX_PDF_BYTES = 5 * 1024 * 1024;
 const GENERIC_ERROR = 'Une erreur est survenue. Réessaie dans un instant.';
 
 const linkButton =
-  'block rounded-md py-1.5 text-left text-sm font-medium text-blue-700 hover:text-blue-800 disabled:cursor-not-allowed disabled:opacity-60';
+  'block rounded-md py-1.5 text-left text-sm font-medium text-sky-700 hover:text-sky-800 disabled:cursor-not-allowed disabled:opacity-60';
 
 function Pending({ title }: { title: string }) {
   return (
     <div
       role="status"
-      className="flex items-center gap-3 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900"
+      className="flex items-center gap-3 rounded-lg border border-sky-100 bg-sky-50 px-4 py-3 text-sm text-sky-900"
     >
-      <Spinner className="h-5 w-5 text-blue-600" />
+      <Spinner className="h-5 w-5 text-sky-600" />
       <div>
         <p className="font-medium">{title}</p>
-        <p className="text-blue-900/70">Ça prend une vingtaine de secondes.</p>
+        <p className="text-sky-900/70">Ça prend une vingtaine de secondes.</p>
       </div>
     </div>
   );
@@ -206,7 +206,7 @@ export function ProfileStep({ onDone }: { onDone: () => void }) {
               type="button"
               onClick={() => fileInput.current?.click()}
               disabled={busy}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
               Choisir mon PDF LinkedIn
             </button>

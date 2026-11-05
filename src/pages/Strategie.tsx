@@ -71,7 +71,7 @@ function GenerateControl({
         type="button"
         onClick={start}
         disabled={generate.isPending}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {generate.isPending && <Spinner />}
         {generate.isPending ? 'Proposition en cours…' : label}
@@ -223,7 +223,7 @@ export default function Strategie() {
   let body;
   if (strategy.isPending) {
     body = (
-      <div className="grid place-items-center py-16 text-blue-600" role="status">
+      <div className="grid place-items-center py-16 text-sky-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>

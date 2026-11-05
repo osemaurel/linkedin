@@ -80,7 +80,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
               key={s.id}
               className={`flex cursor-pointer gap-3 rounded-lg border p-3 text-sm ${
                 target === s.id
-                  ? 'border-blue-400 bg-blue-50'
+                  ? 'border-sky-400 bg-sky-50'
                   : 'border-slate-200 hover:border-slate-300'
               }`}
             >
@@ -90,7 +90,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
                 value={s.id}
                 checked={target === s.id}
                 onChange={() => setTarget(s.id)}
-                className="mt-1 accent-blue-600"
+                className="mt-1 accent-sky-600"
               />
               <span className="min-w-0">
                 <span className="block text-xs font-medium text-slate-500">
@@ -106,7 +106,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
           <label
             className={`flex cursor-pointer gap-3 rounded-lg border p-3 text-sm ${
               target === FREE
-                ? 'border-blue-400 bg-blue-50'
+                ? 'border-sky-400 bg-sky-50'
                 : 'border-slate-200 hover:border-slate-300'
             }`}
           >
@@ -116,7 +116,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
               value={FREE}
               checked={target === FREE}
               onChange={() => setTarget(FREE)}
-              className="mt-1 accent-blue-600"
+              className="mt-1 accent-sky-600"
             />
             <span className="min-w-0 flex-1">
               <span className="block font-medium text-slate-900">Sujet libre</span>
@@ -136,7 +136,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
         {slots.length === 0 && (
           <p className="mt-2 text-xs text-slate-500">
             Aucun créneau à venir dans ton plan.{' '}
-            <Link to="/plan" className="font-medium text-blue-700 hover:underline">
+            <Link to="/plan" className="font-medium text-sky-700 hover:underline">
               Voir mon plan éditorial
             </Link>
           </p>
@@ -157,7 +157,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
               onClick={() => setTone(t.value)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium ${
                 tone === t.value
-                  ? 'bg-white text-blue-700 shadow-sm'
+                  ? 'bg-white text-sky-700 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -189,7 +189,7 @@ export function Composer({ upcoming, preselected, onWritten }: Props) {
           type="button"
           onClick={start}
           disabled={write.isPending || !ready}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {write.isPending && <Spinner />}
           {write.isPending ? 'Rédaction en cours…' : 'Rédiger le post'}

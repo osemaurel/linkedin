@@ -78,7 +78,7 @@ function Workspace({
             onClick={() => setParams({ onglet: t.id }, { replace: true })}
             className={`-mb-px inline-flex items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium ${
               tab === t.id
-                ? 'border-blue-600 text-blue-700'
+                ? 'border-sky-600 text-sky-700'
                 : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -149,7 +149,7 @@ export default function MonReseau() {
   let body;
   if (network.isPending) {
     body = (
-      <div className="grid place-items-center py-16 text-blue-600" role="status">
+      <div className="grid place-items-center py-16 text-sky-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>

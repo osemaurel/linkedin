@@ -35,7 +35,7 @@ export default function Demarrer() {
 
   if (isPending) {
     return (
-      <div className="grid place-items-center py-24 text-blue-600" role="status">
+      <div className="grid place-items-center py-24 text-sky-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>
@@ -77,7 +77,7 @@ export default function Demarrer() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <p className="text-sm font-medium text-blue-700">Étape {current} sur 3</p>
+      <p className="text-sm font-medium text-sky-700">Étape {current} sur 3</p>
       <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
         Faisons connaissance
       </h1>
@@ -90,9 +90,9 @@ export default function Demarrer() {
             key={n}
             className={`h-1.5 flex-1 rounded-full ${
               done[n] && n !== current
-                ? 'bg-blue-600'
+                ? 'bg-sky-600'
                 : n === current
-                  ? 'bg-blue-300'
+                  ? 'bg-sky-300'
                   : 'bg-slate-200'
             }`}
           />

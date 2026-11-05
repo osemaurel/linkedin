@@ -74,7 +74,7 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
   const busy = send.isPending || skip.isPending;
 
   return (
-    <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 sm:p-4">
+    <div className="rounded-lg border border-sky-200 bg-sky-50 p-3 sm:p-4">
       <p className="text-sm font-medium text-slate-900">{question.question}</p>
       <form onSubmit={submit} className="mt-3 flex flex-col gap-2 sm:flex-row">
         <input
@@ -89,7 +89,7 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
         <button
           type="submit"
           disabled={busy || !answer.trim()}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {send.isPending && <Spinner />}
           Envoyer
@@ -108,7 +108,7 @@ export function QuestionPrompt({ question, onOutcome }: Props) {
           type="button"
           onClick={() => skip.mutate()}
           disabled={busy}
-          className="shrink-0 rounded-md px-2 py-1 font-medium text-slate-600 hover:bg-blue-100 hover:text-slate-900 disabled:opacity-60"
+          className="shrink-0 rounded-md px-2 py-1 font-medium text-slate-600 hover:bg-sky-100 hover:text-slate-900 disabled:opacity-60"
         >
           Passer
         </button>

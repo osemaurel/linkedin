@@ -12,7 +12,7 @@ export default function Dashboard() {
       </p>
       <Link
         to="/audit"
-        className="inline-flex items-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+        className="inline-flex items-center rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700"
       >
         Voir mon audit
       </Link>

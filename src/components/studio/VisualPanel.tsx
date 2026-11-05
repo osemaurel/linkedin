@@ -80,7 +80,7 @@ function CarouselEditor({
               onClick={() => update({ ...draft, theme: t.id }, true)}
               className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium ${
                 draft.theme === t.id
-                  ? 'border-blue-500 text-blue-700'
+                  ? 'border-sky-500 text-sky-700'
                   : 'border-slate-200 text-slate-600'
               }`}
             >
@@ -127,7 +127,7 @@ function CarouselEditor({
           type="button"
           onClick={() => void download()}
           disabled={exporting}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-60"
         >
           {exporting && <Spinner />}
           {exporting ? 'Préparation du PDF…' : 'Télécharger le PDF'}
@@ -149,7 +149,7 @@ function CarouselEditor({
         <ol className="space-y-3">
           {draft.slides.map((slide, i) => (
             <li key={i} className="space-y-2 rounded-lg border border-slate-200 p-3">
-              <p className="text-xs font-semibold text-blue-700">Diapositive {i + 1}</p>
+              <p className="text-xs font-semibold text-sky-700">Diapositive {i + 1}</p>
               <label htmlFor={`${id}-t${i}`} className="sr-only">
                 Titre de la diapositive {i + 1}
               </label>
@@ -239,7 +239,7 @@ function ImageView({ image }: { image: PostImage }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="grid h-full place-items-center text-blue-600">
+          <div className="grid h-full place-items-center text-sky-600">
             <Spinner className="h-5 w-5" />
           </div>
         )}
@@ -298,7 +298,7 @@ function ImageTab({
                 aria-checked={style === value}
                 onClick={() => setStyle(value)}
                 className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                  style === value ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600'
+                  style === value ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600'
                 }`}
               >
                 {label}
@@ -394,7 +394,7 @@ export function VisualPanel({
               aria-selected={tab === value}
               onClick={() => setTab(value)}
               className={`rounded-md px-3 py-1.5 text-sm font-medium ${
-                tab === value ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-600'
+                tab === value ? 'bg-white text-sky-700 shadow-sm' : 'text-slate-600'
               }`}
             >
               {label}
@@ -404,7 +404,7 @@ export function VisualPanel({
       </div>
 
       {visuals.isPending ? (
-        <div className="grid place-items-center py-6 text-blue-600" role="status">
+        <div className="grid place-items-center py-6 text-sky-600" role="status">
           <Spinner className="h-5 w-5" />
           <span className="sr-only">Chargement…</span>
         </div>
