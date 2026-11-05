@@ -1,13 +1,28 @@
-export function Logo() {
+type Props = {
+  /** Sur fond bleu : version claire. */
+  inverted?: boolean;
+  /** Barre latérale réduite : le symbole seul. */
+  compact?: boolean;
+};
+
+export function Logo({ inverted = false, compact = false }: Props) {
   return (
-    <span className="flex items-center gap-2 font-semibold tracking-tight text-slate-900">
+    <span
+      className={`flex items-center gap-2.5 font-semibold tracking-tight ${
+        inverted ? 'text-white' : 'text-slate-900'
+      }`}
+    >
       <span
         aria-hidden="true"
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-sky-600 text-xs font-bold text-white"
+        className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg text-sm font-bold shadow-sm ${
+          inverted ? 'bg-white text-sky-700' : 'bg-sky-600 text-white'
+        }`}
       >
         in
       </span>
-      <span className="text-sm sm:text-base">Optimisation LinkedIn</span>
+      <span className={compact ? 'sr-only' : 'truncate text-[15px] leading-tight'}>
+        Optimisation LinkedIn
+      </span>
     </span>
   );
 }
