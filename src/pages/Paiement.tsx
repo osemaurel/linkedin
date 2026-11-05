@@ -12,7 +12,7 @@ const WAIT_MS = 2 * 60 * 1000;
 
 const card = 'rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6';
 const primary =
-  'inline-flex items-center justify-center rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700';
+  'inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700';
 const secondary =
   'inline-flex items-center justify-center rounded-lg border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50';
 
@@ -37,7 +37,7 @@ function usePayment(id: string | undefined, polling: boolean) {
 function Icon({ tone, children }: { tone: 'ok' | 'wait' | 'ko'; children: ReactNode }) {
   const colors = {
     ok: 'bg-emerald-100 text-emerald-700',
-    wait: 'bg-sky-100 text-sky-700',
+    wait: 'bg-blue-100 text-blue-700',
     ko: 'bg-amber-100 text-amber-700',
   };
   return (
@@ -76,7 +76,7 @@ export default function Paiement() {
   let content: ReactNode;
   if (payment.isPending) {
     content = (
-      <div className="grid place-items-center py-10 text-sky-600" role="status">
+      <div className="grid place-items-center py-10 text-blue-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>

@@ -9,7 +9,7 @@ export function RequireOnboarding() {
 
   if (isPending) {
     return (
-      <div className="grid place-items-center py-24 text-sky-600" role="status">
+      <div className="grid place-items-center py-24 text-blue-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>

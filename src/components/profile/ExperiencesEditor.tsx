@@ -147,7 +147,7 @@ export function ExperiencesEditor({ userId, experiences, onChange }: Props) {
           type="button"
           onClick={() => void add()}
           disabled={adding}
-          className="rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-sky-400 hover:text-sky-700 disabled:opacity-60"
+          className="rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-blue-400 hover:text-blue-700 disabled:opacity-60"
         >
           + Ajouter une expérience
         </button>

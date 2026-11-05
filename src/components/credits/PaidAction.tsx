@@ -70,7 +70,7 @@ export function PaidAction<T>({
           type="button"
           onClick={start}
           disabled={action.isPending || disabled}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {action.isPending && <Spinner />}
           {action.isPending ? pendingLabel : label}

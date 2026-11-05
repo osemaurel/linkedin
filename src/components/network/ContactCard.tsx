@@ -19,7 +19,7 @@ import { inputClass } from '@/lib/ui';
 
 const STATUS_COLORS: Record<ContactStatus, string> = {
   contacted: 'bg-slate-100 text-slate-700',
-  replied: 'bg-sky-100 text-sky-800',
+  replied: 'bg-blue-100 text-blue-800',
   in_discussion: 'bg-violet-100 text-violet-800',
   closed: 'bg-emerald-100 text-emerald-800',
 };
@@ -232,7 +232,7 @@ export function ContactCard({ contact, onChange, onDelete, defaultOpen = false }
               href={contact.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-sm font-medium text-sky-700 hover:underline"
+              className="inline-block text-sm font-medium text-blue-700 hover:underline"
             >
               Ouvrir son profil LinkedIn
             </a>

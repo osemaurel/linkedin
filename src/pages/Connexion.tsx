@@ -44,7 +44,7 @@ export default function Connexion() {
       footer={
         <>
           Pas encore de compte ?{' '}
-          <Link to="/inscription" className="font-medium text-sky-700 hover:text-sky-800">
+          <Link to="/inscription" className="font-medium text-blue-700 hover:text-blue-800">
             Crée-le en une minute
           </Link>
         </>
