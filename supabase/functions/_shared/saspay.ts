@@ -81,10 +81,10 @@ export async function cancelCheckout(id: string): Promise<void> {
   await call('POST', `/checkout-sessions/${encodeURIComponent(id)}/cancel/`, {});
 }
 
-type CheckoutStatus = { status?: string; transaction_id?: string | null };
+export type CheckoutStatus = { status?: string; transaction_id?: string | null };
 
 /** Statut de la session, revérifié par SasPay auprès de l'opérateur ; null si inconnue. */
-async function checkoutStatus(id: string): Promise<CheckoutStatus | null> {
+export async function checkoutStatus(id: string): Promise<CheckoutStatus | null> {
   try {
     return await call<CheckoutStatus>(
       'GET',

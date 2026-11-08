@@ -1,4 +1,7 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { AdminLayout } from './components/admin/AdminLayout';
+import { RequireAdmin } from './components/admin/RequireAdmin';
 import { Layout } from './components/Layout';
 import { RequireAuth } from './components/RequireAuth';
 import { RequireOnboarding } from './components/RequireOnboarding';
@@ -16,12 +19,95 @@ import Compte from './pages/Compte';
 import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
+// Centre de contrôle : chargé à la demande, jamais téléchargé par un utilisateur normal.
+const AdminOverview = lazy(() => import('./pages/admin/Overview'));
+const AdminUsers = lazy(() => import('./pages/admin/Users'));
+const AdminUserDetail = lazy(() => import('./pages/admin/UserDetail'));
+const AdminPayments = lazy(() => import('./pages/admin/Payments'));
+const AdminGenerations = lazy(() => import('./pages/admin/Generations'));
+const AdminAuditLog = lazy(() => import('./pages/admin/AuditLog'));
+
+function AdminPage({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="grid place-items-center py-16" role="status">
+          <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600" />
+          <span className="sr-only">Chargement…</span>
+        </div>
+      }
+    >
+      {children}
+    </Suspense>
+  );
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="connexion" element={<Connexion />} />
       <Route path="inscription" element={<Inscription />} />
       <Route element={<RequireAuth />}>
+        <Route path="admin" element={<RequireAdmin />}>
+          <Route element={<AdminLayout />}>
+            <Route
+              index
+              element={
+                <AdminPage>
+                  <AdminOverview />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="utilisateurs"
+              element={
+                <AdminPage>
+                  <AdminUsers />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="utilisateurs/:id"
+              element={
+                <AdminPage>
+                  <AdminUserDetail />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="paiements"
+              element={
+                <AdminPage>
+                  <AdminPayments />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="ia"
+              element={
+                <AdminPage>
+                  <AdminGenerations />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="journal"
+              element={
+                <AdminPage>
+                  <AdminAuditLog />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <AdminPage>
+                  <AdminOverview />
+                </AdminPage>
+              }
+            />
+          </Route>
+        </Route>
         <Route element={<Layout />}>
           <Route element={<RequireOnboarding />}>
             <Route index element={<Dashboard />} />
