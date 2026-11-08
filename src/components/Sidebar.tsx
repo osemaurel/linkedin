@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { Coins, LogOut, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
+import { Coins, LogOut, PanelLeftClose, PanelLeftOpen, ShieldCheck, X } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useProfile } from '@/hooks/useProfile';
 import { formatCredits } from '@/lib/credits';
 import { MENU_SECTIONS, type MenuItem } from '@/lib/menus';
@@ -118,6 +119,7 @@ function CreditsCard({ collapsed, onNavigate }: { collapsed: boolean; onNavigate
 export function Sidebar({ collapsed = false, onToggleCollapse, onClose }: Props) {
   const { user } = useAuth();
   const profile = useProfile();
+  const isAdmin = useIsAdmin();
   const name = profile.data?.full_name?.trim() ?? '';
   const email = user?.email ?? '';
 
@@ -172,6 +174,20 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onClose }: Props)
       </nav>
 
       <div className={`relative space-y-3 pb-4 pt-2 ${collapsed ? 'px-3' : 'px-4'}`}>
+        {isAdmin.data && (
+          <NavLink
+            to="/admin"
+            onClick={onClose}
+            title={collapsed ? 'Centre de contrôle' : undefined}
+            aria-label={collapsed ? 'Centre de contrôle' : undefined}
+            className={`flex items-center gap-3 rounded-xl bg-slate-900/30 px-3 py-2.5 text-sm font-medium text-white ring-1 ring-white/15 hover:bg-slate-900/45 ${
+              collapsed ? 'justify-center' : ''
+            }`}
+          >
+            <ShieldCheck aria-hidden="true" className="h-5 w-5 shrink-0" strokeWidth={1.8} />
+            {!collapsed && 'Centre de contrôle'}
+          </NavLink>
+        )}
         <CreditsCard collapsed={collapsed} onNavigate={onClose} />
 
         <div className={`flex items-center gap-3 rounded-xl ${collapsed ? 'flex-col' : 'px-1'}`}>

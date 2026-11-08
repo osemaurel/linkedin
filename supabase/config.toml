@@ -50,3 +50,7 @@ verify_jwt = false
 
 [functions.generate-image]
 verify_jwt = false
+
+# Centre de contrôle : la fonction vérifie elle-même le jeton puis le droit d’administrateur.
+[functions.admin]
+verify_jwt = false

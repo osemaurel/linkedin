@@ -12,8 +12,78 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.18"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string
+          details: Json
+          id: string
+          target_user: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          target_user?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          id?: string
+          target_user?: string | null
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       assets: {
         Row: {
           created_at: string
@@ -48,50 +118,6 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      audit_suggestions: {
-        Row: {
-          applied: boolean
-          audit_id: string
-          block: string
-          content: string
-          created_at: string
-          id: string
-          impact: Database["public"]["Enums"]["suggestion_impact"]
-          user_id: string
-          variant_index: number
-        }
-        Insert: {
-          applied?: boolean
-          audit_id: string
-          block: string
-          content: string
-          created_at?: string
-          id?: string
-          impact?: Database["public"]["Enums"]["suggestion_impact"]
-          user_id: string
-          variant_index?: number
-        }
-        Update: {
-          applied?: boolean
-          audit_id?: string
-          block?: string
-          content?: string
-          created_at?: string
-          id?: string
-          impact?: Database["public"]["Enums"]["suggestion_impact"]
-          user_id?: string
-          variant_index?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "audit_suggestions_audit_id_fkey"
-            columns: ["audit_id"]
-            isOneToOne: false
-            referencedRelation: "audits"
             referencedColumns: ["id"]
           },
         ]
@@ -152,6 +178,50 @@ export type Database = {
             columns: ["proof_id"]
             isOneToOne: false
             referencedRelation: "proofs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_suggestions: {
+        Row: {
+          applied: boolean
+          audit_id: string
+          block: string
+          content: string
+          created_at: string
+          id: string
+          impact: Database["public"]["Enums"]["suggestion_impact"]
+          user_id: string
+          variant_index: number
+        }
+        Insert: {
+          applied?: boolean
+          audit_id: string
+          block: string
+          content: string
+          created_at?: string
+          id?: string
+          impact?: Database["public"]["Enums"]["suggestion_impact"]
+          user_id: string
+          variant_index?: number
+        }
+        Update: {
+          applied?: boolean
+          audit_id?: string
+          block?: string
+          content?: string
+          created_at?: string
+          id?: string
+          impact?: Database["public"]["Enums"]["suggestion_impact"]
+          user_id?: string
+          variant_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_suggestions_audit_id_fkey"
+            columns: ["audit_id"]
+            isOneToOne: false
+            referencedRelation: "audits"
             referencedColumns: ["id"]
           },
         ]
@@ -716,6 +786,66 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_adjust_credits: {
+        Args: {
+          p_admin: string
+          p_delta: number
+          p_reason: string
+          p_user: string
+        }
+        Returns: number
+      }
+      admin_generation_stats: {
+        Args: { p_days?: number }
+        Returns: {
+          avg_seconds: number
+          credits: number
+          failed: number
+          kind: string
+          tokens_in: number
+          tokens_out: number
+          total: number
+        }[]
+      }
+      admin_list_users: {
+        Args: { p_limit?: number; p_offset?: number; p_search?: string }
+        Returns: {
+          country: string
+          created_at: string
+          credits_balance: number
+          email: string
+          full_name: string
+          id: string
+          is_admin: boolean
+          last_activity_at: string
+          last_sign_in_at: string
+          objective: string
+          total_count: number
+        }[]
+      }
+      admin_overview: { Args: { p_days?: number }; Returns: Json }
+      admin_set_admin: {
+        Args: { p_admin: string; p_grant: boolean; p_user: string }
+        Returns: boolean
+      }
+      admin_user_auth: {
+        Args: { p_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          email_confirmed_at: string
+          id: string
+          last_sign_in_at: string
+        }[]
+      }
+      admin_user_emails: {
+        Args: { p_ids: string[] }
+        Returns: {
+          email: string
+          full_name: string
+          id: string
+        }[]
+      }
       consume_credits: {
         Args: {
           p_generation_id: string
@@ -724,6 +854,7 @@ export type Database = {
         }
         Returns: number
       }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       asset_kind: "carousel" | "image"
@@ -890,6 +1021,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       asset_kind: ["carousel", "image"],
@@ -919,7 +1053,13 @@ export const Constants = {
         "targeting",
       ],
       generation_status: ["pending", "success", "failed"],
-      payment_provider: ["moneyfusion", "moneroo", "pawapay", "stripe", "saspay"],
+      payment_provider: [
+        "moneyfusion",
+        "moneroo",
+        "pawapay",
+        "stripe",
+        "saspay",
+      ],
       payment_status: ["pending", "succeeded", "failed", "refunded"],
       plan_slot_status: ["planned", "drafted", "published", "skipped"],
       post_format: ["text", "carousel", "image"],
