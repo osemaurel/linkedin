@@ -9,6 +9,7 @@ import {
   Menu,
   ScrollText,
   ShieldCheck,
+  Tags,
   Users,
   X,
   type LucideIcon,
@@ -20,6 +21,7 @@ const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
   { to: '/admin', label: 'Vue d’ensemble', icon: LayoutDashboard, end: true },
   { to: '/admin/utilisateurs', label: 'Utilisateurs', icon: Users },
   { to: '/admin/paiements', label: 'Paiements', icon: CreditCard },
+  { to: '/admin/tarifs', label: 'Tarifs', icon: Tags },
   { to: '/admin/ia', label: 'IA & générations', icon: BrainCircuit },
   { to: '/admin/journal', label: 'Journal', icon: ScrollText },
 ];

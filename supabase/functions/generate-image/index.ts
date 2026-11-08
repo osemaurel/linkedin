@@ -1,6 +1,6 @@
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
 import { admin, HttpError, readJson, serve } from '../_shared/http.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import {
   buildImageRequest,
   IMAGE_MODEL,
@@ -43,7 +43,7 @@ serve(async (req, { userId }) => {
   if (previousError) throw previousError;
   const client = openaiClient();
 
-  const { result, balance } = await tracked(userId, 'image', COSTS.image, async () => {
+  const { result, balance } = await tracked(userId, 'image', await getCost('image'), async () => {
     const { data, usage } = await generateJson(client, {
       model: PROMPT_MODEL,
       effort: 'low',

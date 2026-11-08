@@ -78,7 +78,7 @@ export function StatTile({
 
 /** Tableau large : défile dans sa carte, jamais la page. */
 export function TableWrap({ children }: { children: ReactNode }) {
-  return <div className="-mx-4 overflow-x-auto sm:mx-0">{children}</div>;
+  return <div className="overflow-x-auto">{children}</div>;
 }
 
 export const th =

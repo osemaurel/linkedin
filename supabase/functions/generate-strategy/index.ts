@@ -1,7 +1,7 @@
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
 import { buildAuditInput } from '../_shared/audit.ts';
 import { admin, serve } from '../_shared/http.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 import {
   normalizeStrategy,
@@ -60,19 +60,24 @@ serve(async (_req, { userId }) => {
   const client = openaiClient();
   const keepAudience = Boolean(input.targetAudience?.trim());
 
-  const { result, balance } = await tracked(userId, 'pillars', COSTS.pillars, async () => {
-    const { data, usage } = await generateJson(client, {
-      model: MODEL,
-      effort: 'low',
-      system: STRATEGY_SYSTEM_PROMPT,
-      user: buildAuditInput(input),
-      schemaName: 'strategie_contenu',
-      schema: STRATEGY_SCHEMA,
-    });
-    const strategy = normalizeStrategy(data);
-    await saveStrategy(userId, strategy, keepAudience);
-    return { result: strategy, usage };
-  });
+  const { result, balance } = await tracked(
+    userId,
+    'pillars',
+    await getCost('pillars'),
+    async () => {
+      const { data, usage } = await generateJson(client, {
+        model: MODEL,
+        effort: 'low',
+        system: STRATEGY_SYSTEM_PROMPT,
+        user: buildAuditInput(input),
+        schemaName: 'strategie_contenu',
+        schema: STRATEGY_SCHEMA,
+      });
+      const strategy = normalizeStrategy(data);
+      await saveStrategy(userId, strategy, keepAudience);
+      return { result: strategy, usage };
+    },
+  );
 
   return { pillars: result.pillars.length, credits_balance: balance };
 });

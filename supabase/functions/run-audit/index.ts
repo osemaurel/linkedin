@@ -7,7 +7,7 @@ import {
   type AuditResult,
 } from '../_shared/audit.ts';
 import { admin, HttpError, serve } from '../_shared/http.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
@@ -77,29 +77,25 @@ async function saveAudit(userId: string, audit: AuditResult): Promise<string> {
 
 serve(async (_req, { userId }) => {
   const { input, balance } = await loadProfileInput(userId);
-  if (balance < COSTS.audit) throw new HttpError(402, 'insufficient_credits');
+  const cost = await getCost('audit');
+  if (balance < cost) throw new HttpError(402, 'insufficient_credits');
   await ensureNoAuditRunning(userId);
   const client = openaiClient();
 
-  const { result, balance: creditsBalance } = await tracked(
-    userId,
-    'audit',
-    COSTS.audit,
-    async () => {
-      const { data, usage } = await generateJson(client, {
-        model: MODEL,
-        effort: 'low',
-        system: AUDIT_SYSTEM_PROMPT,
-        user: buildAuditInput(input),
-        schemaName: 'audit_linkedin',
-        schema: AUDIT_SCHEMA,
-      });
-      const audit = normalizeAudit(data);
-      if (audit.blocks.every((b) => !b.diagnostic)) throw new Error('audit vide');
-      const auditId = await saveAudit(userId, audit);
-      return { result: { auditId, score: audit.score_global }, usage };
-    },
-  );
+  const { result, balance: creditsBalance } = await tracked(userId, 'audit', cost, async () => {
+    const { data, usage } = await generateJson(client, {
+      model: MODEL,
+      effort: 'low',
+      system: AUDIT_SYSTEM_PROMPT,
+      user: buildAuditInput(input),
+      schemaName: 'audit_linkedin',
+      schema: AUDIT_SCHEMA,
+    });
+    const audit = normalizeAudit(data);
+    if (audit.blocks.every((b) => !b.diagnostic)) throw new Error('audit vide');
+    const auditId = await saveAudit(userId, audit);
+    return { result: { auditId, score: audit.score_global }, usage };
+  });
 
   return { audit_id: result.auditId, score_global: result.score, credits_balance: creditsBalance };
 });

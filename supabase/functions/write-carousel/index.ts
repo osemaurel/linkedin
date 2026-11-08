@@ -1,7 +1,7 @@
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
 import { admin, readJson, serve } from '../_shared/http.ts';
 import { buildVoiceInput, loadVoice } from '../_shared/post.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import {
   CAROUSEL_SCHEMA,
   CAROUSEL_SYSTEM_PROMPT,
@@ -31,7 +31,7 @@ serve(async (req, { userId }) => {
   const theme = THEMES.includes(previousTheme ?? '') ? previousTheme : 'clair';
   const client = openaiClient();
 
-  const { result } = await tracked(userId, 'carousel', COSTS.carousel, async () => {
+  const { result } = await tracked(userId, 'carousel', await getCost('carousel'), async () => {
     const { data, usage } = await generateJson(client, {
       model: MODEL,
       effort: 'low',

@@ -11,6 +11,13 @@ const MESSAGES: Record<string, string> = {
   not_pending: 'Ce paiement n’est plus en attente.',
   payment_not_configured: 'SasPay n’est pas encore configuré (clés manquantes).',
   payment_provider_failed: 'SasPay ne répond pas pour le moment. Réessaie plus tard.',
+  bad_cost: 'Chaque coût doit être un nombre entier entre 0 et 1 000.',
+  bad_pack_name: 'Le nom du pack doit faire entre 2 et 40 caractères.',
+  bad_pack_credits: 'Le nombre de crédits doit être un entier entre 1 et 100 000.',
+  bad_pack_price: 'Le prix doit être un entier entre 100 et 10 000 000 FCFA.',
+  pack_not_found: 'Pack introuvable.',
+  too_many_packs: 'Douze packs au plus : désactive ou modifie un pack existant.',
+  last_active_pack: 'Il faut garder au moins un pack en vente.',
 };
 
 /** Toutes les données d'administration passent par la fonction admin, qui vérifie le droit. */
@@ -92,6 +99,30 @@ export type AuditEntry = {
   created_at: string;
 };
 export type Paged = { total: number; page: number; page_size: number };
+
+export type AdminCost = {
+  kind: string;
+  label: string;
+  cost: number;
+  default_cost: number;
+  updated_at: string | null;
+};
+export type AdminPack = {
+  id: string;
+  name: string;
+  credits: number;
+  price: number;
+  currency: string;
+  active: boolean;
+};
+export type AdminPricing = { actions: AdminCost[]; packs: AdminPack[] };
+export type PackInput = {
+  id?: string;
+  name: string;
+  credits: number;
+  price: number;
+  active: boolean;
+};
 
 export type Overview = {
   stats: OverviewStats;
@@ -184,6 +215,9 @@ export const AUDIT_ACTIONS: Record<string, string> = {
   grant_admin: 'Droit d’administrateur accordé',
   revoke_admin: 'Droit d’administrateur retiré',
   recheck_payment: 'Paiement revérifié',
+  update_costs: 'Coûts modifiés',
+  create_pack: 'Pack créé',
+  update_pack: 'Pack modifié',
 };
 
 export const OBJECTIVE_LABELS: Record<string, string> = {

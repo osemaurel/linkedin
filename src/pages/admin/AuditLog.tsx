@@ -15,11 +15,33 @@ import {
   adminCall,
   AUDIT_ACTIONS,
   fmtDateTime,
+  kindLabel,
   personLabel,
   type AuditEntry,
   type Paged,
   type People,
 } from '@/lib/admin';
+import { formatCost, formatPrice } from '@/lib/credits';
+
+type PackState = { name: string; credits: number; price: number; active: boolean };
+
+const packLine = (p: PackState) =>
+  `${p.credits} crédits · ${formatPrice(p.price, 'XOF')}${p.active ? '' : ' · retiré de la vente'}`;
+
+function packChanges(before: PackState, after: PackState): string {
+  const parts: string[] = [];
+  if (before.name !== after.name) parts.push(`nom : ${before.name} → ${after.name}`);
+  if (before.credits !== after.credits) {
+    parts.push(`crédits : ${before.credits} → ${after.credits}`);
+  }
+  if (before.price !== after.price) {
+    parts.push(`prix : ${formatPrice(before.price, 'XOF')} → ${formatPrice(after.price, 'XOF')}`);
+  }
+  if (before.active !== after.active) {
+    parts.push(after.active ? 'remis en vente' : 'retiré de la vente');
+  }
+  return `« ${after.name} » · ${parts.join(' · ')}`;
+}
 
 function describe(entry: AuditEntry): string {
   const d = entry.details as Record<string, string | number | undefined>;
@@ -28,6 +50,22 @@ function describe(entry: AuditEntry): string {
       return `${Number(d.delta) > 0 ? '+' : ''}${d.delta} crédits · « ${d.reason ?? ''} »`;
     case 'recheck_payment':
       return `SasPay : ${d.provider_status ?? '?'} → ${d.result ?? '?'}`;
+    case 'update_costs': {
+      const changes = (entry.details.changes ?? []) as {
+        kind: string;
+        before: number;
+        after: number;
+      }[];
+      return changes
+        .map((c) => `${kindLabel(c.kind)} : ${formatCost(c.before)} → ${formatCost(c.after)}`)
+        .join(' · ');
+    }
+    case 'create_pack': {
+      const after = entry.details.after as PackState;
+      return `« ${after.name} » · ${packLine(after)}`;
+    }
+    case 'update_pack':
+      return packChanges(entry.details.before as PackState, entry.details.after as PackState);
     default:
       return typeof d.source === 'string' ? d.source : '';
   }

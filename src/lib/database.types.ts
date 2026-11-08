@@ -39,6 +39,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_costs: {
+        Row: {
+          cost: number
+          kind: Database["public"]["Enums"]["generation_kind"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cost: number
+          kind: Database["public"]["Enums"]["generation_kind"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cost?: number
+          kind?: Database["public"]["Enums"]["generation_kind"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       admin_audit_log: {
         Row: {
           action: string
@@ -381,6 +402,42 @@ export type Database = {
           id?: string
           start_date?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      credit_packs: {
+        Row: {
+          active: boolean
+          created_at: string
+          credits: number
+          currency: string
+          id: string
+          name: string
+          price: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          credits: number
+          currency?: string
+          id: string
+          name: string
+          price: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          credits?: number
+          currency?: string
+          id?: string
+          name?: string
+          price?: number
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -824,9 +881,17 @@ export type Database = {
         }[]
       }
       admin_overview: { Args: { p_days?: number }; Returns: Json }
+      admin_save_pack: {
+        Args: { p_admin: string; p_pack: Json }
+        Returns: Json
+      }
       admin_set_admin: {
         Args: { p_admin: string; p_grant: boolean; p_user: string }
         Returns: boolean
+      }
+      admin_set_costs: {
+        Args: { p_admin: string; p_costs: Json }
+        Returns: number
       }
       admin_user_auth: {
         Args: { p_id: string }

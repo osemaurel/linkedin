@@ -19,8 +19,12 @@ export function formatPrice(amount: number, currency: string): string {
   }).format(amount);
 }
 
-/** Relit le solde et l'historique après une action qui a pu débiter (ou être refusée). */
+/**
+ * Relit le solde et l'historique après une action qui a pu débiter (ou être refusée),
+ * ainsi que les tarifs, au cas où ils auraient changé entre-temps.
+ */
 export function refreshCredits(queryClient: QueryClient) {
   void queryClient.invalidateQueries({ queryKey: ['profile'] });
   void queryClient.invalidateQueries({ queryKey: ['credit-history'] });
+  void queryClient.invalidateQueries({ queryKey: ['pricing'] });
 }

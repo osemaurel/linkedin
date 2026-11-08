@@ -15,7 +15,7 @@ import {
   type PlannedSlot,
   type Rhythm,
 } from '../_shared/plan.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
@@ -77,7 +77,7 @@ serve(async (req, { userId }) => {
   const { result, balance } = await tracked(
     userId,
     'content_plan',
-    COSTS.content_plan,
+    await getCost('content_plan'),
     async () => {
       const { data, usage } = await generateJson(client, {
         model: MODEL,

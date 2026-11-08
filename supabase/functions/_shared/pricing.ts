@@ -1,8 +1,13 @@
+import { admin } from './http.ts';
+
 /**
- * Seule source des coûts et des packs. Les Edge Functions débitent avec COSTS,
- * l'application les lit via la fonction `pricing` : aucun coût n'est écrit en dur côté client.
+ * Coûts et packs. Ils vivent en base (tables action_costs et credit_packs) et se modifient
+ * depuis le centre de contrôle : chaque Edge Function relit le coût au moment de débiter,
+ * l'application les lit via la fonction `pricing`. Rien n'est écrit en dur côté client.
  */
-export const COSTS = {
+
+/** Barème de départ : il ne sert que si une action n'a pas encore de ligne en base. */
+export const DEFAULT_COSTS = {
   audit: 5,
   block_rewrite: 0,
   profile_parse: 0,
@@ -18,31 +23,82 @@ export const COSTS = {
   image: 5,
 } as const;
 
-export type PricedAction = keyof typeof COSTS;
+export type PricedAction = keyof typeof DEFAULT_COSTS;
 
-export const ACTIONS: { kind: PricedAction; label: string; cost: number }[] = [
-  { kind: 'audit', label: 'Audit complet du profil', cost: COSTS.audit },
-  {
-    kind: 'block_rewrite',
-    label: 'Réponse à une question de l’audit',
-    cost: COSTS.block_rewrite,
-  },
-  { kind: 'profile_parse', label: 'Lecture de ton profil LinkedIn', cost: COSTS.profile_parse },
-  { kind: 'pillars', label: 'Proposition de stratégie de contenu', cost: COSTS.pillars },
-  { kind: 'content_plan', label: 'Plan éditorial', cost: COSTS.content_plan },
-  { kind: 'plan_slot', label: 'Nouvel angle pour un créneau', cost: COSTS.plan_slot },
-  { kind: 'post', label: 'Rédaction d’un post', cost: COSTS.post },
-  { kind: 'post_refine', label: 'Retouche d’un post', cost: COSTS.post_refine },
-  { kind: 'voice_profile', label: 'Apprentissage de ta voix', cost: COSTS.voice_profile },
-  { kind: 'targeting', label: 'Ciblage et recherches LinkedIn', cost: COSTS.targeting },
-  { kind: 'outreach_message', label: 'Messages d’approche', cost: COSTS.outreach_message },
-  { kind: 'carousel', label: 'Carrousel', cost: COSTS.carousel },
-  { kind: 'image', label: 'Image d’illustration', cost: COSTS.image },
-];
+export const PRICED_ACTIONS = Object.keys(DEFAULT_COSTS) as PricedAction[];
 
-// Montants provisoires : le prix des packs reste à fixer (voir le cadrage, « Monétisation »).
-export const PACKS = [
-  { id: 'decouverte', name: 'Découverte', credits: 10, price: 1000, currency: 'XOF' },
-  { id: 'essentiel', name: 'Essentiel', credits: 30, price: 2500, currency: 'XOF' },
-  { id: 'pro', name: 'Pro', credits: 80, price: 6000, currency: 'XOF' },
-];
+export const ACTION_LABELS: Record<PricedAction, string> = {
+  audit: 'Audit complet du profil',
+  block_rewrite: 'Réponse à une question de l’audit',
+  profile_parse: 'Lecture de ton profil LinkedIn',
+  pillars: 'Proposition de stratégie de contenu',
+  content_plan: 'Plan éditorial',
+  plan_slot: 'Nouvel angle pour un créneau',
+  post: 'Rédaction d’un post',
+  post_refine: 'Retouche d’un post',
+  voice_profile: 'Apprentissage de ta voix',
+  targeting: 'Ciblage et recherches LinkedIn',
+  outreach_message: 'Messages d’approche',
+  carousel: 'Carrousel',
+  image: 'Image d’illustration',
+};
+
+export type Pack = {
+  id: string;
+  name: string;
+  credits: number;
+  price: number;
+  currency: string;
+  active: boolean;
+};
+
+/** Coût actuel d'une action, lu au moment de débiter. */
+export async function getCost(kind: PricedAction): Promise<number> {
+  const { data, error } = await admin
+    .from('action_costs')
+    .select('cost')
+    .eq('kind', kind)
+    .maybeSingle();
+  if (error) throw error;
+  return data?.cost ?? DEFAULT_COSTS[kind];
+}
+
+/** Toutes les actions payantes, dans l'ordre du barème, avec leur coût actuel. */
+export async function loadActions() {
+  const { data, error } = await admin.from('action_costs').select('kind, cost, updated_at');
+  if (error) throw error;
+  const rows = new Map(data.map((r) => [r.kind as string, r]));
+  return PRICED_ACTIONS.map((kind) => ({
+    kind,
+    label: ACTION_LABELS[kind],
+    cost: rows.get(kind)?.cost ?? DEFAULT_COSTS[kind],
+    default_cost: DEFAULT_COSTS[kind] as number,
+    updated_at: rows.get(kind)?.updated_at ?? null,
+  }));
+}
+
+/** Packs du moins cher au plus cher ; les packs désactivés seulement pour l'administration. */
+export async function loadPacks({ includeInactive = false } = {}): Promise<Pack[]> {
+  let query = admin
+    .from('credit_packs')
+    .select('id, name, credits, price, currency, active')
+    .order('price')
+    .order('credits');
+  if (!includeInactive) query = query.eq('active', true);
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
+}
+
+/** Pack achetable : il doit exister et être actif. */
+export async function findActivePack(id: unknown): Promise<Pack | null> {
+  if (typeof id !== 'string' || !id) return null;
+  const { data, error } = await admin
+    .from('credit_packs')
+    .select('id, name, credits, price, currency, active')
+    .eq('id', id)
+    .eq('active', true)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}

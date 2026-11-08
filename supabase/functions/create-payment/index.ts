@@ -1,5 +1,5 @@
 import { admin, HttpError, readJson, serve } from '../_shared/http.ts';
-import { PACKS } from '../_shared/pricing.ts';
+import { findActivePack } from '../_shared/pricing.ts';
 import {
   cancelCheckout,
   countryCode,
@@ -26,8 +26,9 @@ async function ensureNotFlooding(userId: string) {
 
 serve(async (req, { userId, email }) => {
   const body = await readJson(req);
-  // Le prix vient du serveur : le client n'envoie que l'identifiant du pack.
-  const pack = PACKS.find((p) => p.id === body.pack_id);
+  // Le prix vient de la base : le client n'envoie que l'identifiant d'un pack actif. Le
+  // paiement garde le montant et les crédits du moment, même si le pack change ensuite.
+  const pack = await findActivePack(body.pack_id);
   if (!pack) throw new HttpError(400, 'unknown_pack');
   if (!email) throw new HttpError(409, 'email_missing');
   await ensureNotFlooding(userId);
