@@ -2,7 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.118.0';
 import { extractText, getDocumentProxy } from 'npm:unpdf@1.9.1';
 import { generateJson, openaiClient, tracked } from '../_shared/ai.ts';
 import { admin, anonKey, HttpError, readJson, serve, supabaseUrl } from '../_shared/http.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import {
   EMPTY_PROFILE,
   normalizeProfile,
@@ -144,7 +144,7 @@ serve(async (req, { userId, authHeader }) => {
   const { result: profile } = await tracked(
     userId,
     'profile_parse',
-    COSTS.profile_parse,
+    await getCost('profile_parse'),
     async () => {
       const { data, usage } = await generateJson(client, {
         model: MODEL,

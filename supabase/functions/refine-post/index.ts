@@ -10,7 +10,7 @@ import {
   POST_SCHEMA,
   REFINE_SYSTEM_PROMPT,
 } from '../_shared/post.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
@@ -39,12 +39,16 @@ serve(async (req, { userId }) => {
   const [{ input }, voice] = await Promise.all([loadProfileInput(userId), loadVoice(userId)]);
   const client = openaiClient();
 
-  const { result } = await tracked(userId, 'post_refine', COSTS.post_refine, async () => {
-    const { data, usage } = await generateJson(client, {
-      model: MODEL,
-      effort: 'low',
-      system: REFINE_SYSTEM_PROMPT,
-      user: `${buildAuditInput(input)}
+  const { result } = await tracked(
+    userId,
+    'post_refine',
+    await getCost('post_refine'),
+    async () => {
+      const { data, usage } = await generateJson(client, {
+        model: MODEL,
+        effort: 'low',
+        system: REFINE_SYSTEM_PROMPT,
+        user: `${buildAuditInput(input)}
 
 ${buildVoiceInput(voice)}
 
@@ -55,18 +59,19 @@ ${post.body.slice(0, MAX_POST)}
 <demande>
 ${instruction}
 </demande>`,
-      schemaName: 'post_linkedin',
-      schema: POST_SCHEMA,
-    });
-    const text = normalizePost(data);
-    const { error: updateError } = await admin
-      .from('posts')
-      .update({ body: text })
-      .eq('id', post.id)
-      .eq('user_id', userId);
-    if (updateError) throw updateError;
-    return { result: text, usage };
-  });
+        schemaName: 'post_linkedin',
+        schema: POST_SCHEMA,
+      });
+      const text = normalizePost(data);
+      const { error: updateError } = await admin
+        .from('posts')
+        .update({ body: text })
+        .eq('id', post.id)
+        .eq('user_id', userId);
+      if (updateError) throw updateError;
+      return { result: text, usage };
+    },
+  );
 
   return { body: result };
 });

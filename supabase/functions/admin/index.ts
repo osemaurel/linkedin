@@ -1,4 +1,5 @@
 import { admin, HttpError, readJson, serve } from '../_shared/http.ts';
+import { loadActions, loadPacks, PRICED_ACTIONS } from '../_shared/pricing.ts';
 import { checkoutStatus, SasPayError, settlePayment } from '../_shared/saspay.ts';
 
 /**
@@ -43,6 +44,15 @@ const RPC_ERRORS: Record<string, number> = {
   user_not_found: 404,
   negative_balance: 409,
   self_change: 409,
+  bad_request: 400,
+  bad_cost: 400,
+  unknown_action: 400,
+  bad_pack_name: 400,
+  bad_pack_credits: 400,
+  bad_pack_price: 400,
+  pack_not_found: 404,
+  too_many_packs: 409,
+  last_active_pack: 409,
 };
 
 function rpcError(error: { message?: string }) {
@@ -350,6 +360,44 @@ const actions: Record<string, (body: Body, adminId: string) => Promise<unknown>>
       page_size: PAGE,
       people: await people(rows.flatMap((r) => [r.admin_id, r.target_user])),
     };
+  },
+
+  async pricing() {
+    const [actionList, packs] = await Promise.all([
+      loadActions(),
+      loadPacks({ includeInactive: true }),
+    ]);
+    return { actions: actionList, packs };
+  },
+
+  async set_costs(body, adminId) {
+    const costs = body.costs;
+    if (!costs || typeof costs !== 'object' || Array.isArray(costs)) {
+      throw new HttpError(400, 'bad_request');
+    }
+    const known = new Set<string>(PRICED_ACTIONS);
+    if (!Object.keys(costs).every((k) => known.has(k))) throw new HttpError(400, 'bad_request');
+    // Les coûts modifiés et leur entrée au journal sont écrits dans la même transaction.
+    const { data, error } = await admin.rpc('admin_set_costs', {
+      p_admin: adminId,
+      p_costs: costs,
+    });
+    if (error) throw rpcError(error);
+    return { changed: data as number };
+  },
+
+  async save_pack(body, adminId) {
+    const pack = body.pack;
+    if (!pack || typeof pack !== 'object' || Array.isArray(pack)) {
+      throw new HttpError(400, 'bad_request');
+    }
+    const { id, name, credits, price, active } = pack as Body;
+    const { data, error } = await admin.rpc('admin_save_pack', {
+      p_admin: adminId,
+      p_pack: { id: id ?? null, name, credits, price, active: active ?? true },
+    });
+    if (error) throw rpcError(error);
+    return { pack: data };
   },
 };
 

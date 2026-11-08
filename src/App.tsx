@@ -26,6 +26,7 @@ const AdminUserDetail = lazy(() => import('./pages/admin/UserDetail'));
 const AdminPayments = lazy(() => import('./pages/admin/Payments'));
 const AdminGenerations = lazy(() => import('./pages/admin/Generations'));
 const AdminAuditLog = lazy(() => import('./pages/admin/AuditLog'));
+const AdminPricing = lazy(() => import('./pages/admin/Pricing'));
 
 function AdminPage({ children }: { children: React.ReactNode }) {
   return (
@@ -79,6 +80,14 @@ export default function App() {
               element={
                 <AdminPage>
                   <AdminPayments />
+                </AdminPage>
+              }
+            />
+            <Route
+              path="tarifs"
+              element={
+                <AdminPage>
+                  <AdminPricing />
                 </AdminPage>
               }
             />

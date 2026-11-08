@@ -8,7 +8,7 @@ import {
   type Impact,
 } from '../_shared/audit.ts';
 import { admin, HttpError, readJson, serve } from '../_shared/http.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
@@ -100,7 +100,7 @@ serve(async (req, { userId }) => {
   const { result: count } = await tracked(
     userId,
     'block_rewrite',
-    COSTS.block_rewrite,
+    await getCost('block_rewrite'),
     async () => {
       const { data, usage } = await generateJson(client, {
         model: MODEL,

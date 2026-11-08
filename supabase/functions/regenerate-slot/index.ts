@@ -9,7 +9,7 @@ import {
   SLOT_SCHEMA,
   SLOT_SYSTEM_PROMPT,
 } from '../_shared/plan.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.4-mini';
@@ -39,7 +39,7 @@ serve(async (req, { userId }) => {
   const pillar = strategy.pillars.find((p) => p.id === slot.pillar_id);
   const client = openaiClient();
 
-  const { result } = await tracked(userId, 'plan_slot', COSTS.plan_slot, async () => {
+  const { result } = await tracked(userId, 'plan_slot', await getCost('plan_slot'), async () => {
     const { data, usage } = await generateJson(client, {
       model: MODEL,
       effort: 'low',

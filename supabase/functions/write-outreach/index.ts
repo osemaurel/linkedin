@@ -10,7 +10,7 @@ import {
   OUTREACH_SCHEMA,
   OUTREACH_SYSTEM_PROMPT,
 } from '../_shared/network.ts';
-import { COSTS } from '../_shared/pricing.ts';
+import { getCost } from '../_shared/pricing.ts';
 import { loadProfileInput } from '../_shared/profileInput.ts';
 
 const MODEL = 'gpt-5.5';
@@ -42,7 +42,7 @@ serve(async (req, { userId }) => {
   const { result, balance } = await tracked(
     userId,
     'outreach_message',
-    COSTS.outreach_message,
+    await getCost('outreach_message'),
     async () => {
       const { data, usage } = await generateJson(client, {
         model: MODEL,
