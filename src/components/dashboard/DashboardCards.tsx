@@ -10,7 +10,6 @@ import {
   Compass,
   Gauge,
   PenLine,
-  Sparkles,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -45,9 +44,8 @@ export function NextActionCard({
       />
       <p
         id="prochaine-etape"
-        className="relative flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-sky-100"
+        className="relative text-xs font-semibold uppercase tracking-wider text-sky-100"
       >
-        <Sparkles aria-hidden="true" className="h-4 w-4" strokeWidth={2} />
         Prochaine étape
       </p>
       <h2 className="relative mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
