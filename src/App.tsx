@@ -36,7 +36,7 @@ function AdminPage({ children }: { children: React.ReactNode }) {
     <Suspense
       fallback={
         <div className="grid place-items-center py-16" role="status">
-          <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600" />
+          <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-brand-600" />
           <span className="sr-only">Chargement…</span>
         </div>
       }

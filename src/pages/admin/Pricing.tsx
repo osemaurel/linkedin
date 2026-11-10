@@ -115,7 +115,7 @@ function CostsEditor({
               const value = toInt(draft, 0, 1000);
               const isChanged = draft.trim() !== String(a.cost);
               return (
-                <tr key={a.kind} className={isChanged ? 'bg-sky-50/70' : undefined}>
+                <tr key={a.kind} className={isChanged ? 'bg-brand-50/70' : undefined}>
                   <td className={`${td} font-medium text-slate-900`}>{a.label}</td>
                   <td className={td}>
                     <input
@@ -182,7 +182,7 @@ function CostsEditor({
           <button
             type="submit"
             disabled={!changed.length || invalid.length > 0 || save.isPending}
-            className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {save.isPending && <Spinner />}
             Enregistrer les coûts
@@ -325,7 +325,7 @@ function PackForm({
           type="checkbox"
           checked={active}
           onChange={(e) => setActive(e.target.checked)}
-          className="h-4 w-4 rounded border-slate-300 text-sky-600"
+          className="h-4 w-4 rounded border-slate-300 text-brand-600"
         />
         En vente (proposé aux utilisateurs)
       </label>
@@ -352,7 +352,7 @@ function PackForm({
         <button
           type="submit"
           disabled={!valid || save.isPending}
-          className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {save.isPending && <Spinner />}
           {pack ? 'Enregistrer' : 'Créer le pack'}
@@ -473,7 +473,7 @@ function PacksSection({ packs }: { packs: AdminPack[] }) {
             onClick={edit('new')}
             disabled={full || editing === 'new'}
             title={full ? `${MAX_PACKS} packs au plus` : undefined}
-            className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Plus aria-hidden="true" className="h-4 w-4" />
             Nouveau pack
@@ -498,7 +498,7 @@ function PacksSection({ packs }: { packs: AdminPack[] }) {
         {packs.map((p) => (
           <li
             key={p.id}
-            className={`space-y-2 px-5 py-4 ${editing === p.id ? 'bg-sky-50/70' : ''}`}
+            className={`space-y-2 px-5 py-4 ${editing === p.id ? 'bg-brand-50/70' : ''}`}
           >
             <div className="flex items-center justify-between gap-3">
               <span className="font-medium text-slate-900">{p.name}</span>
@@ -533,7 +533,7 @@ function PacksSection({ packs }: { packs: AdminPack[] }) {
                 <tr
                   key={p.id}
                   className={
-                    editing === p.id ? 'bg-sky-50/70' : p.active ? undefined : 'text-slate-500'
+                    editing === p.id ? 'bg-brand-50/70' : p.active ? undefined : 'text-slate-500'
                   }
                 >
                   <td className={`${td} font-medium text-slate-900`}>{p.name}</td>

@@ -52,7 +52,7 @@ export function ProofsEditor({ userId, proofs, onChange }: Props) {
         <fieldset key={proof.id} className="space-y-3 rounded-lg border border-slate-200 p-4">
           <legend className="sr-only">Preuve {index + 1}</legend>
           {proof.source === 'entretien' && (
-            <p className="text-xs font-medium text-sky-700">
+            <p className="text-xs font-medium text-brand-700">
               Ajoutée depuis une question de l’audit
             </p>
           )}
@@ -93,7 +93,7 @@ export function ProofsEditor({ userId, proofs, onChange }: Props) {
         type="button"
         onClick={() => void add()}
         disabled={adding}
-        className="rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-sky-400 hover:text-sky-700 disabled:opacity-60"
+        className="rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-brand-400 hover:text-brand-700 disabled:opacity-60"
       >
         + Ajouter une preuve
       </button>

@@ -29,7 +29,7 @@ export function Library({ posts, selectedId, onSelect }: Props) {
               onClick={() => onSelect(post.id)}
               aria-current={post.id === selectedId ? 'true' : undefined}
               className={`flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-slate-50 ${
-                post.id === selectedId ? 'bg-sky-50' : ''
+                post.id === selectedId ? 'bg-brand-50' : ''
               }`}
             >
               <span className="min-w-0 flex-1">

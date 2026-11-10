@@ -55,7 +55,7 @@ function LoadError({ what, onRetry }: { what: string; onRetry: () => void }) {
 
 function Loading() {
   return (
-    <div className="grid place-items-center py-8 text-sky-600" role="status">
+    <div className="grid place-items-center py-8 text-brand-600" role="status">
       <Spinner className="h-5 w-5" />
       <span className="sr-only">Chargement…</span>
     </div>

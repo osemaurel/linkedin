@@ -124,9 +124,9 @@ export function PlanCalendar({ slots, pillars, onChange }: Props) {
                 onDrop={(e) => drop(e, day)}
                 className={`flex min-h-14 flex-col rounded-lg border text-left sm:min-h-24 ${
                   dragOver === day
-                    ? 'border-sky-400 bg-sky-50'
+                    ? 'border-brand-400 bg-brand-50'
                     : isSelected
-                      ? 'border-sky-300 bg-sky-50/60'
+                      ? 'border-brand-300 bg-brand-50/60'
                       : 'border-slate-100'
                 }`}
               >
@@ -138,7 +138,7 @@ export function PlanCalendar({ slots, pillars, onChange }: Props) {
                   className="flex w-full flex-1 flex-col items-stretch gap-1 p-1 text-left sm:flex-none"
                 >
                   <span
-                    className={`text-xs tabular-nums ${day === today ? 'font-bold text-sky-700' : 'text-slate-600'}`}
+                    className={`text-xs tabular-nums ${day === today ? 'font-bold text-brand-700' : 'text-slate-600'}`}
                   >
                     {Number(day.slice(8))}
                   </span>

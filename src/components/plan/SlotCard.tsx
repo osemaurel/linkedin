@@ -27,7 +27,7 @@ type Props = {
 };
 
 const smallButton =
-  'inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-sky-700 hover:bg-sky-50 disabled:opacity-60';
+  'inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-brand-700 hover:bg-brand-50 disabled:opacity-60';
 
 export function SlotCard({ slot, pillars, onChange, defaultOpen = false }: Props) {
   const queryClient = useQueryClient();

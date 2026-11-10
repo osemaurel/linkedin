@@ -121,7 +121,7 @@ export default function AdminPayments() {
                     <td className={td}>
                       <Link
                         to={`/admin/utilisateurs/${p.user_id}`}
-                        className="font-medium text-slate-900 hover:text-sky-700"
+                        className="font-medium text-slate-900 hover:text-brand-700"
                       >
                         {personLabel(payments.data.people, p.user_id)}
                       </Link>

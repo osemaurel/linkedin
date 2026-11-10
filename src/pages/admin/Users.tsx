@@ -103,7 +103,7 @@ export default function AdminUsers() {
                           e.preventDefault();
                           navigate(`/admin/utilisateurs/${u.id}`);
                         }}
-                        className="font-medium text-slate-900 hover:text-sky-700"
+                        className="font-medium text-slate-900 hover:text-brand-700"
                       >
                         {u.full_name || u.email}
                       </a>

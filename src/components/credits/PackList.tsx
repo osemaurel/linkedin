@@ -23,7 +23,7 @@ function BuyButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-sky-600 font-semibold text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60 ${
+      className={`inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-brand-600 font-semibold text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60 ${
         compact ? 'px-3 py-2 text-sm' : 'mt-4 px-4 py-2.5 text-sm'
       }`}
     >

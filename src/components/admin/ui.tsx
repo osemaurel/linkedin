@@ -28,7 +28,7 @@ export function PageHeader({
 
 export function Loading() {
   return (
-    <div className="grid place-items-center py-16 text-sky-600" role="status">
+    <div className="grid place-items-center py-16 text-brand-600" role="status">
       <Spinner className="h-6 w-6" />
       <span className="sr-only">Chargement…</span>
     </div>

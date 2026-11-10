@@ -38,7 +38,7 @@ export default function Inscription() {
             <button
               type="button"
               onClick={() => setSentTo(null)}
-              className="font-medium text-sky-700 hover:text-sky-800"
+              className="font-medium text-brand-700 hover:text-brand-800"
             >
               corrige ton adresse
             </button>
@@ -91,7 +91,7 @@ export default function Inscription() {
       footer={
         <>
           Déjà un compte ?{' '}
-          <Link to="/connexion" className="font-medium text-sky-700 hover:text-sky-800">
+          <Link to="/connexion" className="font-medium text-brand-700 hover:text-brand-800">
             Connecte-toi
           </Link>
         </>

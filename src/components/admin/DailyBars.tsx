@@ -75,7 +75,7 @@ export function DailyBars({
               : '';
           return (
             <g key={p.day}>
-              {d && <path d={d} fill={active === i ? '#0369a1' : '#0284c7'} />}
+              {d && <path d={d} fill={active === i ? '#0765e8' : '#126dfb'} />}
               <rect
                 x={LEFT + i * slot}
                 y={TOP}
@@ -88,7 +88,7 @@ export function DailyBars({
                 onPointerEnter={() => setActive(i)}
                 onFocus={() => setActive(i)}
                 onBlur={() => setActive(null)}
-                className="cursor-default outline-none focus-visible:fill-sky-100/60"
+                className="cursor-default outline-none focus-visible:fill-brand-100/60"
               />
             </g>
           );

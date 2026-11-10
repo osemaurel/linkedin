@@ -166,7 +166,7 @@ export default function AdminGenerations() {
                       <td className={td}>
                         <Link
                           to={`/admin/utilisateurs/${g.user_id}`}
-                          className="font-medium text-slate-900 hover:text-sky-700"
+                          className="font-medium text-slate-900 hover:text-brand-700"
                         >
                           {personLabel(gens.data.people, g.user_id)}
                         </Link>

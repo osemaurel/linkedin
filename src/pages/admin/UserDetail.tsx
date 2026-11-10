@@ -109,7 +109,7 @@ function AdjustCredits({ userId, balance }: { userId: string; balance: number })
         <button
           type="submit"
           disabled={!valid || adjust.isPending}
-          className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50"
         >
           {adjust.isPending && <Spinner />}
           Ajouter

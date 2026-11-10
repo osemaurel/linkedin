@@ -89,7 +89,7 @@ export function PillarsEditor({ userId, pillars, onChange }: Props) {
         >
           <legend className="sr-only">Pilier {index + 1}</legend>
           <div className="flex items-center justify-between gap-2">
-            <span aria-hidden="true" className="text-sm font-semibold text-sky-700">
+            <span aria-hidden="true" className="text-sm font-semibold text-brand-700">
               Pilier {index + 1}
             </span>
             <div className="flex items-center gap-0.5">
@@ -156,7 +156,7 @@ export function PillarsEditor({ userId, pillars, onChange }: Props) {
           type="button"
           onClick={() => void add()}
           disabled={busy}
-          className="w-full rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-sky-400 hover:text-sky-700 disabled:opacity-60 sm:w-auto"
+          className="w-full rounded-lg border border-dashed border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:border-brand-400 hover:text-brand-700 disabled:opacity-60 sm:w-auto"
         >
           + Ajouter un pilier
         </button>

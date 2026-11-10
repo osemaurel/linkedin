@@ -9,7 +9,7 @@ export function RequireAdmin() {
   if (isAdmin.isPending) {
     return (
       <div className="grid min-h-dvh place-items-center" role="status">
-        <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600" />
+        <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-brand-600" />
         <span className="sr-only">Chargement…</span>
       </div>
     );
@@ -26,7 +26,7 @@ export function RequireAdmin() {
           </p>
           <Link
             to="/"
-            className="mt-6 inline-flex rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-700"
+            className="mt-6 inline-flex rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
           >
             Retour à l’application
           </Link>
