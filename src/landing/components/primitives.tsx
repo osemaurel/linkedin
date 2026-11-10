@@ -159,25 +159,32 @@ export function SectionHeading({
   title,
   text,
   titleAs: TitleTag = 'h2',
+  fixed = false,
 }: {
   tag: string;
   title: string;
   text: string;
   titleAs?: 'h2' | 'h1';
+  /** Espacements et largeurs de l'ordinateur sur tous les écrans (cas du blog dans l'original). */
+  fixed?: boolean;
 }) {
   return (
-    <div className="flex w-full flex-col items-center gap-4 desk:gap-5">
+    <div className={`flex w-full flex-col items-center ${fixed ? 'gap-5' : 'gap-4 desk:gap-5'}`}>
       <Reveal y={40} delay={0.1}>
         <Tag>{tag}</Tag>
       </Reveal>
       <div className="flex w-full flex-col items-center gap-2.5 text-center">
-        <Reveal y={60} delay={0.2} className="w-full tab:max-w-[410px] desk:max-w-[450px]">
+        <Reveal
+          y={60}
+          delay={0.2}
+          className={`w-full ${fixed ? 'max-w-[450px]' : 'tab:max-w-[410px] desk:max-w-[450px]'}`}
+        >
           <TitleTag className="al-h2 text-balance">{title}</TitleTag>
         </Reveal>
         <Reveal
           y={60}
           delay={0.3}
-          className="w-full max-w-[270px] tab:max-w-[320px] desk:max-w-[340px]"
+          className={`w-full ${fixed ? 'max-w-[340px]' : 'max-w-[270px] tab:max-w-[320px] desk:max-w-[340px]'}`}
         >
           <p className="al-p text-balance">{text}</p>
         </Reveal>

@@ -320,3 +320,21 @@
     0 -0.917741px 3.12032px -1.83333px #126dfb12,
     0 -4.01016px 13.6345px -2.75px #126dfb0f;
 }
+
+/* Titre de l'article à la une : 20 px sur téléphone (comme les petites cartes), puis 32 / 40 px. */
+.al-feat-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2em;
+  letter-spacing: -0.04em;
+}
+@media (min-width: 810px) {
+  .al-feat-title {
+    font-size: 32px;
+  }
+}
+@media (min-width: 1200px) {
+  .al-feat-title {
+    font-size: 40px;
+  }
+}

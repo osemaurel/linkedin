@@ -49,6 +49,10 @@ function ZoomImage({ src, hovered }: { src: string; hovered: boolean }) {
   );
 }
 
+/**
+ * Article à la une : image et texte côte à côte à partir de 810 px. Sur téléphone, il prend
+ * la forme des petites cartes (étiquette sur l'image, titre plus petit, sans durée de lecture).
+ */
 function FeaturedPost() {
   const [hovered, setHovered] = useState(false);
   return (
@@ -56,20 +60,23 @@ function FeaturedPost() {
       href="#blogs"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="al-card flex w-full flex-col gap-2 overflow-hidden p-4 tab:h-[400px] tab:flex-row tab:gap-5 desk:p-5"
+      className="al-card flex w-full flex-col gap-2 overflow-hidden p-4 tab:h-[400px] tab:flex-row tab:gap-5 tab:p-5"
     >
-      <div className="h-[225px] w-full overflow-hidden rounded-xl tab:h-full tab:flex-1">
+      <div className="relative h-[225px] w-full overflow-hidden rounded-xl tab:h-full tab:flex-1">
         <ZoomImage src={FEATURED.image} hovered={hovered} />
-      </div>
-      <div className="flex flex-col justify-start gap-8 p-2 tab:h-full tab:flex-1 tab:justify-between tab:px-4 tab:pb-0 tab:pt-4 desk:px-5 desk:pt-5">
-        <div className="flex flex-col items-start gap-4 tab:gap-5">
+        <div className="absolute right-3 top-3 z-[1] tab:hidden">
           <Tag>{FEATURED.category}</Tag>
+        </div>
+      </div>
+      <div className="flex flex-col justify-start p-2 tab:h-full tab:flex-1 tab:justify-between tab:px-4 tab:pb-0 tab:pt-4 desk:px-5 desk:pt-5">
+        <div className="flex flex-col items-start gap-5">
+          <Tag className="max-tab:hidden">{FEATURED.category}</Tag>
           <div className="flex flex-col gap-2 tab:gap-2.5">
-            <h3 className="al-h3b text-balance">{FEATURED.title}</h3>
+            <h3 className="al-feat-title text-balance">{FEATURED.title}</h3>
             <p className="al-p line-clamp-2 max-w-[450px]">{FEATURED.text}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 tab:flex">
           <span className="h-1.5 w-1.5 rounded-full bg-al-blue" />
           <span className="al-p14 !text-al-blue">{FEATURED.readTime}</span>
         </div>
@@ -131,18 +138,22 @@ export function Blogs() {
   return (
     <Section id="blogs" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
+        fixed
         tag="Blogs"
         title="Helpful insights to help you grow"
         text="Explore our latest articles to help your SaaS product succeed and scale smarter."
       />
-      <Reveal y={60} delay={0.2} className="flex w-full flex-col gap-5">
+      <div className="flex w-full flex-col gap-5">
         <FeaturedPost />
+        {/* Chaque petite carte apparaît seule, comme dans l'original. */}
         <div className="grid w-full grid-cols-1 gap-5 tab:grid-cols-2 desk:grid-cols-3">
           {POSTS.map((p) => (
-            <PostCard key={p.title} post={p} />
+            <Reveal key={p.title} y={60} delay={0.2} className="h-full">
+              <PostCard post={p} />
+            </Reveal>
           ))}
         </div>
-      </Reveal>
+      </div>
       <ViewAll />
     </Section>
   );

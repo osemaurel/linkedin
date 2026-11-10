@@ -1,7 +1,7 @@
 import { img, svg } from '../assets';
 import { InlineSvg, Reveal, Section, SectionHeading } from '../components/primitives';
 
-const FEATURES = [
+const FEATURES: { image: string; title: string; text: string; tabletText?: string }[] = [
   {
     image: img.featureUnifiedMetrics,
     title: 'Unified Metrics',
@@ -11,6 +11,8 @@ const FEATURES = [
     image: img.featureAiInsights,
     title: 'AI Growth Insights',
     text: 'Actionable suggestions from your data, without digging into spreadsheets or dashboards.',
+    // Sur tablette, l'original raccourcit ce texte.
+    tabletText: 'Actionable suggestions from your data, without digging into spreadsheets .',
   },
   {
     image: img.featureUsageTracking,
@@ -41,7 +43,16 @@ export function Features() {
               </div>
               <div className="flex flex-col gap-1 px-2 tab:gap-2">
                 <h4 className="al-h4">{f.title}</h4>
-                <p className="al-p max-w-[400px] text-balance">{f.text}</p>
+                <p className="al-p max-w-[400px] text-balance">
+                  {f.tabletText ? (
+                    <>
+                      <span className="tab:max-desk:hidden">{f.text}</span>
+                      <span className="hidden tab:max-desk:inline">{f.tabletText}</span>
+                    </>
+                  ) : (
+                    f.text
+                  )}
+                </p>
               </div>
             </article>
           </Reveal>
@@ -167,7 +178,7 @@ export function HowItWorks() {
               </div>
               <div className="flex flex-col gap-1 px-2 tab:gap-2">
                 <h4 className="al-h4">{s.title}</h4>
-                <p className="al-p text-balance">{s.text}</p>
+                <p className="al-p">{s.text}</p>
               </div>
             </article>
           </Reveal>
