@@ -19,6 +19,9 @@ import Compte from './pages/Compte';
 import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
+// Copie de la page Alytics, base de la future page d'accueil : chargée à la demande.
+const AlyticsLanding = lazy(() => import('./landing/AlyticsLanding'));
+
 // Centre de contrôle : chargé à la demande, jamais téléchargé par un utilisateur normal.
 const AdminOverview = lazy(() => import('./pages/admin/Overview'));
 const AdminUsers = lazy(() => import('./pages/admin/Users'));
@@ -46,6 +49,14 @@ function AdminPage({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Routes>
+      <Route
+        path="landing"
+        element={
+          <Suspense fallback={null}>
+            <AlyticsLanding />
+          </Suspense>
+        }
+      />
       <Route path="connexion" element={<Connexion />} />
       <Route path="inscription" element={<Inscription />} />
       <Route element={<RequireAuth />}>
