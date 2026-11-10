@@ -90,7 +90,7 @@ const BENEFITS = [
   {
     icon: svg.benefitSimple,
     title: 'En français, pour ta région',
-    text: 'Le tutoiement, les codes locaux et des exemples qui parlent à ton marché.',
+    text: 'Des conseils et des textes adaptés aux usages professionnels de ta région.',
   },
 ];
 

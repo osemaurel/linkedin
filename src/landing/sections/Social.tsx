@@ -64,8 +64,8 @@ export function Africa() {
               <div className="flex flex-col items-center gap-2">
                 <h2 className="al-h2 max-w-[500px] text-balance">Pensé pour ton marché</h2>
                 <p className="al-p max-w-[450px] text-balance">
-                  Le français, le tutoiement et les codes de la région, du Sénégal au Cameroun. Pas
-                  un outil américain traduit à la va-vite.
+                  Des exemples, des métiers et des entreprises qui te parlent. Un outil conçu en
+                  français dès le départ, pas une simple traduction.
                 </p>
               </div>
             </div>
