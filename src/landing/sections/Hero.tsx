@@ -158,7 +158,7 @@ function Dashboard() {
         <div className="al-dash-glow relative aspect-[1.53333] w-full rounded-lg tab:rounded-[19px] desk:rounded-[28px]">
           <img
             src={img.heroDashboard}
-            alt="Tableau de bord d’Optimisation : prochaine étape, score du profil, avancement et activité récente"
+            alt="Tableau de bord d’Uptimizz : prochaine étape, score du profil, avancement et activité récente"
             className="absolute inset-0 h-full w-full rounded-[inherit] object-cover"
           />
         </div>

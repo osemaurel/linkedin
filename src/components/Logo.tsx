@@ -33,9 +33,7 @@ export function Logo({ inverted = false, compact = false }: Props) {
       }`}
     >
       <Mark inverted={inverted} />
-      <span className={compact ? 'sr-only' : 'truncate text-[15px] leading-tight'}>
-        Optimisation
-      </span>
+      <span className={compact ? 'sr-only' : 'truncate text-[15px] leading-tight'}>Uptimizz</span>
     </span>
   );
 }

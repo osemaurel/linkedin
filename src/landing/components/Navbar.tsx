@@ -19,11 +19,11 @@ export function Logo({ className = '' }: { className?: string }) {
   return (
     <a
       href="#top"
-      aria-label="Optimisation, retour en haut de page"
+      aria-label="Uptimizz, retour en haut de page"
       className={`flex items-center gap-1.5 ${className}`}
     >
       <InlineSvg svg={svg.logo} className="h-[30px] w-[30px]" />
-      <span className="al-h4 text-al-ink">Optimisation</span>
+      <span className="al-h4 text-al-ink">Uptimizz</span>
     </a>
   );
 }

@@ -10,13 +10,13 @@ import { FinalCall, Tips } from './sections/Stories';
 import './landing.css';
 
 /**
- * Page d'accueil d'Optimisation. Mise en page, police, couleurs et animations reprises du
+ * Page d'accueil d'Uptimizz. Mise en page, police, couleurs et animations reprises du
  * modèle Alytics (Framer) ; textes, marque et illustrations propres au produit.
  */
 export default function Landing() {
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = 'Optimisation · Transforme ton profil LinkedIn en opportunités';
+    document.title = 'Uptimizz · Transforme ton profil LinkedIn en opportunités';
     const body = document.body.style;
     const previousBg = body.backgroundColor;
     body.backgroundColor = '#fcfcfc';
