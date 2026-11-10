@@ -68,7 +68,7 @@ export default function AdminOverview() {
           label="Paiements en attente"
           value={fmtNumber(s.payments_pending)}
           sub={
-            <Link to="/admin/paiements" className="font-medium text-sky-700 hover:underline">
+            <Link to="/admin/paiements" className="font-medium text-brand-700 hover:underline">
               Voir les paiements
             </Link>
           }
@@ -92,7 +92,7 @@ export default function AdminOverview() {
           label="Taux d’échec (7 j)"
           value={`${failRate} %`}
           sub={
-            <Link to="/admin/ia" className="font-medium text-sky-700 hover:underline">
+            <Link to="/admin/ia" className="font-medium text-brand-700 hover:underline">
               Voir l’IA
             </Link>
           }

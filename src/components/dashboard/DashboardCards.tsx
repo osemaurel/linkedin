@@ -36,7 +36,7 @@ export function NextActionCard({
   return (
     <section
       aria-labelledby="prochaine-etape"
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-sky-600 to-sky-700 p-6 text-white shadow-md shadow-sky-900/10 sm:p-8 ${className}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 p-6 text-white shadow-md shadow-brand-900/10 sm:p-8 ${className}`}
     >
       <div
         aria-hidden="true"
@@ -44,17 +44,17 @@ export function NextActionCard({
       />
       <p
         id="prochaine-etape"
-        className="relative text-xs font-semibold uppercase tracking-wider text-sky-100"
+        className="relative text-xs font-semibold uppercase tracking-wider text-white"
       >
         Prochaine étape
       </p>
       <h2 className="relative mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
         {action.title}
       </h2>
-      <p className="relative mt-2 max-w-xl text-sm text-sky-50 sm:text-base">{action.text}</p>
+      <p className="relative mt-2 max-w-xl text-sm text-white sm:text-base">{action.text}</p>
       <Link
         to={action.to}
-        className="relative mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-sky-700 shadow-sm transition-colors hover:bg-sky-50"
+        className="relative mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-brand-700 shadow-sm transition-colors hover:bg-brand-50"
       >
         {action.cta}
         <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={2.2} />
@@ -105,7 +105,7 @@ export function ScoreCard({ audits }: { audits: AuditPoint[] }) {
             <span className="text-slate-500">
               Audit du {dateFormat.format(new Date(latest.createdAt))}
             </span>
-            <Link to="/audit" className="font-medium text-sky-700 hover:underline">
+            <Link to="/audit" className="font-medium text-brand-700 hover:underline">
               Voir l’audit
             </Link>
           </div>
@@ -143,10 +143,10 @@ export function ProgressCard({ steps }: { steps: Step[] }) {
         aria-valuemax={steps.length}
         aria-valuenow={done}
         aria-valuetext={`${done} étapes sur ${steps.length}`}
-        className="mt-3 h-2 rounded-full bg-sky-100"
+        className="mt-3 h-2 rounded-full bg-brand-100"
       >
         <div
-          className="h-2 rounded-full bg-sky-600 transition-[width]"
+          className="h-2 rounded-full bg-brand-600 transition-[width]"
           style={{ width: `${percent}%` }}
         />
       </div>
@@ -169,7 +169,7 @@ export function ProgressCard({ steps }: { steps: Step[] }) {
               {!step.done && (
                 <ArrowRight
                   aria-hidden="true"
-                  className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-sky-600"
+                  className="h-4 w-4 shrink-0 text-slate-300 transition-colors group-hover:text-brand-600"
                 />
               )}
             </Link>
@@ -181,7 +181,7 @@ export function ProgressCard({ steps }: { steps: Step[] }) {
 }
 
 const ACTIVITY_ICONS: Record<ActivityKind, { icon: LucideIcon; tone: string }> = {
-  audit: { icon: Gauge, tone: 'bg-sky-50 text-sky-700' },
+  audit: { icon: Gauge, tone: 'bg-brand-50 text-brand-700' },
   strategy: { icon: Compass, tone: 'bg-violet-50 text-violet-700' },
   plan: { icon: CalendarDays, tone: 'bg-amber-50 text-amber-700' },
   post: { icon: PenLine, tone: 'bg-emerald-50 text-emerald-700' },

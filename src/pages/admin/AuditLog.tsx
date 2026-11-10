@@ -115,7 +115,7 @@ export default function AdminAuditLog() {
                       {e.target_user ? (
                         <Link
                           to={`/admin/utilisateurs/${e.target_user}`}
-                          className="hover:text-sky-700"
+                          className="hover:text-brand-700"
                         >
                           {personLabel(log.data.people, e.target_user)}
                         </Link>

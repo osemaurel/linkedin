@@ -141,7 +141,7 @@ export function PostEditor({ post, onChange, onDelete }: Props) {
 
       <form
         onSubmit={submitRefine}
-        className="rounded-lg border border-sky-200 bg-sky-50 p-3 sm:p-4"
+        className="rounded-lg border border-brand-200 bg-brand-50 p-3 sm:p-4"
       >
         <label htmlFor={`${id}-refine`} className="block text-sm font-medium text-slate-900">
           Affiner
@@ -162,7 +162,7 @@ export function PostEditor({ post, onChange, onDelete }: Props) {
           <button
             type="submit"
             disabled={refine.isPending || !request.trim()}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {refine.isPending && <Spinner />}
             {refine.isPending ? 'Réécriture…' : 'Affiner'}

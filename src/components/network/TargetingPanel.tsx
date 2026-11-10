@@ -46,7 +46,7 @@ function QueryCard({ query }: { query: SavedQuery }) {
           href={linkedinSearchUrl(query.keywords)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700"
+          className="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
         >
           Ouvrir dans LinkedIn
         </a>

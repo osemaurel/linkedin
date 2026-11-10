@@ -50,7 +50,7 @@ export function ScoreTrend({ points }: { points: AuditPoint[] }) {
               cx={x(i)}
               cy={y(p.score)}
               r={i === last || i === shown ? 5 : 4}
-              fill={i === last ? '#0284c7' : '#94a3b8'}
+              fill={i === last ? '#126dfb' : '#94a3b8'}
               stroke="#ffffff"
               strokeWidth={2}
               vectorEffect="non-scaling-stroke"
@@ -67,7 +67,7 @@ export function ScoreTrend({ points }: { points: AuditPoint[] }) {
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onBlur={() => setActive(null)}
-              className="cursor-default outline-none focus-visible:stroke-sky-500"
+              className="cursor-default outline-none focus-visible:stroke-brand-500"
               strokeWidth={2}
             />
           </g>

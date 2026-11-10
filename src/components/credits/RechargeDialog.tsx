@@ -63,7 +63,7 @@ export function RechargeDialog({ open, onClose, label, cost, balance, packs }: P
           <Link
             to="/compte"
             onClick={onClose}
-            className="text-sm font-medium text-sky-700 hover:underline"
+            className="text-sm font-medium text-brand-700 hover:underline"
           >
             Voir mon compte
           </Link>

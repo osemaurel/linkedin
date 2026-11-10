@@ -50,7 +50,7 @@ export default function Audit() {
 
   if (onboarding.isPending || audits.isPending) {
     return (
-      <div className="grid place-items-center py-24 text-sky-600" role="status">
+      <div className="grid place-items-center py-24 text-brand-600" role="status">
         <Spinner className="h-6 w-6" />
         <span className="sr-only">Chargement…</span>
       </div>
@@ -97,7 +97,7 @@ export default function Audit() {
           </p>
           <Link
             to="/demarrer"
-            className="mt-4 inline-flex items-center rounded-lg bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700"
+            className="mt-4 inline-flex items-center rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700"
           >
             Présenter mon profil
           </Link>
@@ -167,7 +167,7 @@ export default function Audit() {
         <ul className="mt-5 grid gap-x-8 gap-y-2.5 border-t border-slate-100 pt-4 sm:grid-cols-2">
           {BLOCKS.map((block) => (
             <li key={block} className="flex items-center justify-between gap-3 text-sm">
-              <a href={`#bloc-${block}`} className="text-slate-700 hover:text-sky-700">
+              <a href={`#bloc-${block}`} className="text-slate-700 hover:text-brand-700">
                 {BLOCK_LABELS[block]}
               </a>
               <span className="flex items-center gap-2">

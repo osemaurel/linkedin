@@ -32,7 +32,7 @@ function AdminSidebar({ onClose }: { onClose?: () => void }) {
     <div className="flex h-full flex-col bg-slate-900 text-white">
       <div className="flex h-16 shrink-0 items-center justify-between gap-2 px-5">
         <span className="flex items-center gap-2.5 font-semibold">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-sky-500 text-white">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand-500 text-white">
             <ShieldCheck aria-hidden="true" className="h-5 w-5" strokeWidth={2} />
           </span>
           <span className="leading-tight">
@@ -62,7 +62,7 @@ function AdminSidebar({ onClose }: { onClose?: () => void }) {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-sky-500 text-white shadow-md shadow-sky-950/30'
+                  ? 'bg-brand-500 text-white shadow-md shadow-brand-950/30'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`
             }
@@ -138,7 +138,7 @@ export function AdminLayout() {
           >
             <Menu aria-hidden="true" className="h-5 w-5" />
           </button>
-          <ShieldCheck aria-hidden="true" className="h-5 w-5 text-sky-400" />
+          <ShieldCheck aria-hidden="true" className="h-5 w-5 text-brand-400" />
           <span className="font-semibold">Centre de contrôle</span>
         </header>
         <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-10 lg:py-10">

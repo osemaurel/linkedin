@@ -42,7 +42,7 @@ export default function Dashboard() {
     return (
       <div className="mx-auto max-w-5xl space-y-6">
         {header}
-        <div className="grid place-items-center py-16 text-sky-600" role="status">
+        <div className="grid place-items-center py-16 text-brand-600" role="status">
           <Spinner className="h-6 w-6" />
           <span className="sr-only">Chargement…</span>
         </div>

@@ -42,7 +42,7 @@ function MobileTopBar({
       </div>
       <NavLink
         to="/compte"
-        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-sky-50 px-3 text-sm font-semibold text-sky-800 ring-1 ring-sky-100"
+        className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-brand-50 px-3 text-sm font-semibold text-brand-800 ring-1 ring-brand-100"
       >
         <Coins aria-hidden="true" className="h-4 w-4 text-amber-500" strokeWidth={2} />
         <span className="sr-only">Solde : </span>

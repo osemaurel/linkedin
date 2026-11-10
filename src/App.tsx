@@ -19,6 +19,9 @@ import Compte from './pages/Compte';
 import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
+// Page d'accueil publique (marque Optimisation) : chargée à la demande.
+const Landing = lazy(() => import('./landing/Landing'));
+
 // Centre de contrôle : chargé à la demande, jamais téléchargé par un utilisateur normal.
 const AdminOverview = lazy(() => import('./pages/admin/Overview'));
 const AdminUsers = lazy(() => import('./pages/admin/Users'));
@@ -33,7 +36,7 @@ function AdminPage({ children }: { children: React.ReactNode }) {
     <Suspense
       fallback={
         <div className="grid place-items-center py-16" role="status">
-          <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600" />
+          <span className="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-t-brand-600" />
           <span className="sr-only">Chargement…</span>
         </div>
       }
@@ -46,6 +49,14 @@ function AdminPage({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Routes>
+      <Route
+        path="landing"
+        element={
+          <Suspense fallback={null}>
+            <Landing />
+          </Suspense>
+        }
+      />
       <Route path="connexion" element={<Connexion />} />
       <Route path="inscription" element={<Inscription />} />
       <Route element={<RequireAuth />}>
