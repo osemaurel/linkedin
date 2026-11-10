@@ -2,36 +2,41 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { img, svg } from '../assets';
 import { FRAMER_EASE } from '../components/anim';
+import { SIGNUP_HREF } from '../components/links';
 import { Button, InlineSvg, Reveal, Section, SectionHeading, Tag } from '../components/primitives';
 
 const hoverSpring = { type: 'spring', stiffness: 500, damping: 60, mass: 1 } as const;
 
+/**
+ * Conseils à venir. Ces articles restent à écrire : les cartes renvoient pour l'instant à
+ * cette section, en attendant les vraies pages.
+ */
 const FEATURED = {
-  category: 'Operations',
-  title: 'Streamlining SaaS Without Adding Overhead',
-  text: 'A clear look at how efficient operations help SaaS teams reduce friction, stay aligned, and scale without unnecessary complexity.',
-  image: img.blogStreamlining,
-  readTime: '5 min read',
+  category: 'Profil',
+  title: 'Ton titre LinkedIn, la ligne qui décide de tout',
+  text: 'Ce que les recruteurs et les clients lisent en premier, et comment écrire un titre qui dit clairement ce que tu fais et pour qui.',
+  image: img.blogMeeting,
+  readTime: '5 min de lecture',
 };
 
 const POSTS = [
   {
-    category: 'Growth',
-    title: 'Growing a SaaS Without Breaking Systems',
-    text: 'How sustainable growth comes from strong foundations, clear processes, and systems that scale as your product and team expand.',
-    image: img.blogGrowing,
+    category: 'Profil',
+    title: 'Une section « À propos » qui donne envie',
+    text: 'Raconter ton parcours en quelques lignes, avec des résultats concrets plutôt que des adjectifs.',
+    image: img.blogLaptop,
   },
   {
-    category: 'Workflows',
-    title: 'Designing SaaS Workflows That Scale',
-    text: 'A practical guide to building clear, reliable workflows that support growth without adding complexity or slowing teams down.',
-    image: img.blogWorkflows,
+    category: 'Contenu',
+    title: 'Publier chaque semaine sans y passer tes soirées',
+    text: 'Trouver tes sujets, garder ton style et tenir le rythme grâce à un plan éditorial simple.',
+    image: img.blogDesk,
   },
   {
-    category: 'Automation',
-    title: 'The Real Cost of Manual SaaS Work',
-    text: 'A practical look at simplifying workflows, reducing manual work, and scaling efficiently with smart automation.',
-    image: img.blogManualWork,
+    category: 'Réseau',
+    title: 'Aborder un recruteur sans paraître insistant',
+    text: 'Une note de connexion courte, un message de suivi utile et le bon moment pour relancer.',
+    image: img.blogNight,
   },
 ];
 
@@ -121,7 +126,7 @@ function ViewAll() {
       animate={{ opacity: hovered ? 0.64 : 1 }}
       transition={hoverSpring}
     >
-      <span className="al-h4 text-al-ink">View all</span>
+      <span className="al-h4 text-al-ink">Tous les conseils</span>
       <motion.span
         className="block h-5 w-5"
         initial={false}
@@ -134,14 +139,14 @@ function ViewAll() {
   );
 }
 
-export function Blogs() {
+export function Tips() {
   return (
     <Section id="blogs" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
         fixed
-        tag="Blogs"
-        title="Helpful insights to help you grow"
-        text="Explore our latest articles to help your SaaS product succeed and scale smarter."
+        tag="Conseils"
+        title="Des conseils pour avancer sur LinkedIn"
+        text="Nos guides pour soigner ton profil, publier avec régularité et créer des contacts utiles."
       />
       <div className="flex w-full flex-col gap-5">
         <FeaturedPost />
@@ -208,9 +213,9 @@ function Envelope({
   );
 }
 
-export function Newsletter() {
+export function FinalCall() {
   return (
-    <Section id="newsletter">
+    <Section id="commencer">
       <Reveal y={60} delay={0.2} className="w-full">
         <div className="al-card relative flex h-[330px] w-full flex-col items-center justify-center gap-2.5 overflow-hidden rounded-3xl p-4 tab:rounded-[20px] tab:p-[30px] desk:h-[370px] desk:p-10">
           <img
@@ -239,14 +244,14 @@ export function Newsletter() {
           <div className="relative z-[2] flex w-full flex-col items-center gap-5 text-center">
             <div className="flex flex-col items-center gap-2.5">
               <h2 className="al-h2 max-w-[450px] text-balance">
-                Subscribe to the Alytics Newsletter!
+                Prêt à faire travailler ton profil&nbsp;?
               </h2>
               <p className="al-p max-w-[270px] text-balance tab:max-w-[320px] desk:max-w-[340px]">
-                Get expert tips, updates, and smart analytics insights delivered straight to your
-                inbox.
+                Crée ton compte, importe ton profil et découvre ce qu’il faut changer pour être
+                remarqué.
               </p>
             </div>
-            <Button href="#newsletter">Subscribe Now</Button>
+            <Button href={SIGNUP_HREF}>Créer mon compte</Button>
           </div>
         </div>
       </Reveal>

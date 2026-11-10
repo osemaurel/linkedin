@@ -1,10 +1,10 @@
 /*
- * Landing : copie fidèle de la page Alytics (Framer).
+ * Page d'accueil : mise en page et animations reprises du modèle Alytics (Framer).
  * Police Inter 500 servie par Framer, mêmes réglages OpenType (cv09, cv03, cv04, cv11).
  */
 
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -12,7 +12,7 @@
   unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -20,7 +20,7 @@
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -28,7 +28,7 @@
   unicode-range: U+1F00-1FFF;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -36,7 +36,7 @@
   unicode-range: U+0370-03FF;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -46,7 +46,7 @@
     U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -56,7 +56,7 @@
     U+2074-207E, U+2080-208E, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Alytics Inter';
+  font-family: 'Landing Inter';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -77,7 +77,7 @@
   overflow-x: clip;
   background: var(--al-page);
   color: var(--al-ink);
-  font-family: 'Alytics Inter', 'Inter', sans-serif;
+  font-family: 'Landing Inter', 'Inter', sans-serif;
   font-weight: 500;
   font-feature-settings:
     'cv09' on,
@@ -94,7 +94,11 @@
   box-shadow: none;
 }
 
-/* Styles de texte (presets Framer), par seuil : < 810, 810-1199, >= 1200. */
+/*
+ * Styles de texte (presets Framer), par seuil : < 810, 810-1199, >= 1200.
+ * L'original met une majuscule à chaque mot (usage anglais) ; en français, on garde la
+ * casse normale des phrases. Taille, interlettrage et hauteur de ligne sont inchangés.
+ */
 .al-h1,
 .al-h2,
 .al-h3,
@@ -112,19 +116,19 @@
   font-size: 44px;
   line-height: 1.2em;
   letter-spacing: -0.05em;
-  text-transform: capitalize;
+  text-transform: none;
 }
 .al-h2 {
   font-size: 28px;
   line-height: 1.2em;
   letter-spacing: -0.05em;
-  text-transform: capitalize;
+  text-transform: none;
 }
 .al-h3 {
   font-size: 20px;
   line-height: 1.2em;
   letter-spacing: -0.04em;
-  text-transform: capitalize;
+  text-transform: none;
 }
 .al-h3b {
   font-size: 28px;
@@ -287,7 +291,7 @@
     -25px 0 25px -3.75px #e6efff40;
 }
 
-/* Carte de prix « Most Popular » et colonne Alytics du comparatif : halo bleu. */
+/* Carte de prix « Recommandé » et colonne Optimisation du comparatif : halo bleu. */
 .al-pop {
   box-shadow:
     rgba(18, 109, 251, 0.14) 0 0.796192px 0.557334px -0.6875px,

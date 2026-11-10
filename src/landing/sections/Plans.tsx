@@ -1,99 +1,138 @@
-import { useState, type CSSProperties } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { svg } from '../assets';
+import { SIGNUP_HREF } from '../components/links';
 import { Button, InlineSvg, Reveal, Section, SectionHeading } from '../components/primitives';
 
 const toggleSpring = { type: 'spring', stiffness: 500, damping: 60, mass: 1 } as const;
 
+/**
+ * Packs de crédits, aux prix enregistrés au centre de contrôle au moment de l'écriture.
+ * Les prix sont recopiés ici : la page d'accueil est publique et ne les lit pas encore en base.
+ */
 const PLANS = [
   {
-    name: 'Starter',
-    monthly: '$39',
-    yearly: '$139',
-    text: 'Great for small teams getting started.',
+    name: 'Découverte',
+    credits: 10,
+    price: 1000,
+    text: 'Pour lancer ton premier audit.',
     points: [
-      '5,000 tracked users',
-      'Core analytics',
-      'Simple dashboards',
-      'Email support',
-      'Weekly reports',
+      '10 crédits',
+      'Ton audit et tes réécritures',
+      'Toutes les fonctionnalités',
+      'Paiement mobile money',
+      'Sans abonnement',
     ],
   },
   {
-    name: 'Growth',
-    monthly: '$99',
-    yearly: '$199',
-    text: 'For fast-growing teams who are scaling.',
+    name: 'Essentiel',
+    credits: 30,
+    price: 2500,
+    text: 'Pour optimiser ton profil et publier.',
     points: [
-      'Everything in starter',
-      '50,000 tracked users',
-      'Funnel & drop-off analysis',
-      'Custom dashboards',
-      'Team collaboration tools',
+      '30 crédits',
+      'Audit, stratégie et plan éditorial',
+      'Des posts rédigés dans ta voix',
+      'Paiement mobile money',
+      'Sans abonnement',
     ],
     popular: true,
   },
   {
-    name: 'Premium',
-    monthly: '$299',
-    yearly: '$599',
-    text: 'Great for enterprizes to convert more.',
+    name: 'Pro',
+    credits: 80,
+    price: 6000,
+    text: 'Pour aller jusqu’à la prospection.',
     points: [
-      'All Growth features',
-      'Unlimited tracked users',
-      'Dedicated account manager',
-      'SLA & compliance support',
-      'Advanced integrations',
+      '80 crédits, le meilleur prix',
+      'Tout le parcours, plusieurs fois',
+      'Images et carrousels pour tes posts',
+      'Messages d’approche personnalisés',
+      'Sans abonnement',
     ],
   },
 ];
 
-/** Interrupteur Mensuel / Annuel : la pastille bleue glisse sous l'option choisie. */
-function BillingToggle({ yearly, onChange }: { yearly: boolean; onChange: (y: boolean) => void }) {
+/** Parité fixe du franc CFA : 1 € = 655,957 F CFA. */
+const XOF_PER_EUR = 655.957;
+// Espace insécable pleine largeur : l'espace fine d'Intl disparaît presque à cette taille.
+const fcfa = new Intl.NumberFormat('fr-FR');
+const euro = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+const formatPrice = (xof: number, inEuro: boolean) =>
+  inEuro
+    ? euro.format(xof / XOF_PER_EUR)
+    : `${fcfa.format(xof).replace(/\u202f/g, '\u00a0')}\u00a0F`;
+
+/** Interrupteur F CFA / euros : la pastille bleue glisse sous l'option choisie. */
+function CurrencyToggle({ inEuro, onChange }: { inEuro: boolean; onChange: (v: boolean) => void }) {
+  const left = useRef<HTMLButtonElement>(null);
+  const right = useRef<HTMLButtonElement>(null);
+  const [boxes, setBoxes] = useState<{ x: number; w: number }[]>([]);
+
+  // La pastille épouse la largeur réelle de chaque option (textes de longueurs différentes).
+  useLayoutEffect(() => {
+    const measure = () =>
+      setBoxes(
+        [left.current, right.current].map((el) => ({
+          x: (el?.offsetLeft ?? 0) - 2,
+          w: (el?.offsetWidth ?? 0) + 4,
+        })),
+      );
+    measure();
+    void document.fonts?.ready.then(measure);
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+  const target = boxes[inEuro ? 1 : 0];
+
   return (
     <div className="flex rounded-2xl bg-white p-1 shadow-[0_1px_20px_rgba(0,0,0,0.03)]">
       <div
         role="radiogroup"
-        aria-label="Facturation"
+        aria-label="Monnaie d’affichage"
         className="relative flex gap-1 rounded-xl bg-al-page p-1"
       >
-        <motion.div
-          aria-hidden="true"
-          className="absolute bottom-0.5 top-0.5 rounded-[10px] bg-al-blue/[0.12]"
-          initial={false}
-          animate={yearly ? { left: '46%', width: '53%' } : { left: '2px', width: '46%' }}
-          transition={toggleSpring}
-        />
+        {target && (
+          <motion.div
+            aria-hidden="true"
+            className="absolute bottom-0.5 top-0.5 rounded-[10px] bg-al-blue/[0.12]"
+            initial={false}
+            animate={{ left: target.x, width: target.w }}
+            transition={toggleSpring}
+          />
+        )}
         <button
+          ref={left}
           type="button"
           role="radio"
-          aria-checked={!yearly}
+          aria-checked={!inEuro}
           onClick={() => onChange(false)}
           className="relative flex h-10 items-center rounded-[10px] px-4"
         >
           <motion.span
             className="al-p"
             initial={false}
-            animate={{ color: yearly ? '#575757cc' : '#126dfb' }}
+            animate={{ color: inEuro ? '#575757cc' : '#126dfb' }}
             transition={toggleSpring}
           >
-            Monthly
+            F CFA
           </motion.span>
         </button>
         <button
+          ref={right}
           type="button"
           role="radio"
-          aria-checked={yearly}
+          aria-checked={inEuro}
           onClick={() => onChange(true)}
           className="relative flex h-10 items-center gap-2.5 rounded-[10px] pl-2.5 pr-1"
         >
           <motion.span
             className="al-p"
             initial={false}
-            animate={{ color: yearly ? '#126dfb' : '#575757cc' }}
+            animate={{ color: inEuro ? '#126dfb' : '#575757cc' }}
             transition={toggleSpring}
           >
-            Yearly
+            Euros
           </motion.span>
           <span
             className="al-inner-border relative flex h-6 items-center overflow-hidden rounded-md px-1.5"
@@ -103,16 +142,16 @@ function BillingToggle({ yearly, onChange }: { yearly: boolean; onChange: (y: bo
               aria-hidden="true"
               className="absolute inset-0 bg-al-blue"
               initial={false}
-              animate={{ opacity: yearly ? 1 : 0 }}
+              animate={{ opacity: inEuro ? 1 : 0 }}
               transition={toggleSpring}
             />
             <motion.span
-              className="al-p12 relative"
+              className="al-p12 relative whitespace-nowrap"
               initial={false}
-              animate={{ color: yearly ? '#ffffff' : '#126dfb' }}
+              animate={{ color: inEuro ? '#ffffff' : '#126dfb' }}
               transition={toggleSpring}
             >
-              -20%
+              1 € = 656 F
             </motion.span>
           </span>
         </button>
@@ -128,7 +167,7 @@ function Price({ value }: { value: string }) {
       <AnimatePresence initial={false} mode="popLayout">
         <motion.span
           key={value}
-          className="al-h2 block !normal-case"
+          className="al-h2 block whitespace-nowrap"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -50, opacity: 0 }}
@@ -141,24 +180,24 @@ function Price({ value }: { value: string }) {
   );
 }
 
-function PlanCard({ plan, yearly }: { plan: (typeof PLANS)[number]; yearly: boolean }) {
+function PlanCard({ plan, inEuro }: { plan: (typeof PLANS)[number]; inEuro: boolean }) {
   const body = (
     <div className={`flex w-full flex-col bg-white ${plan.popular ? 'rounded-[18px]' : ''}`}>
       <div className="flex w-full flex-col gap-6 p-5">
-        <p className="al-p14 !text-al-ink">{plan.name}</p>
+        <p className="al-p14 !text-al-ink">Pack {plan.name}</p>
         <div className="flex w-full flex-col gap-2.5">
           <div className="flex items-center gap-1">
-            <Price value={yearly ? plan.yearly : plan.monthly} />
-            <span className="al-p14">/month</span>
+            <Price value={formatPrice(plan.price, inEuro)} />
+            <span className="al-p14 whitespace-nowrap">/ {plan.credits} crédits</span>
           </div>
           <p className="al-p">{plan.text}</p>
         </div>
-        <Button href="#pricing" className="w-full">
-          Get Started
+        <Button href={SIGNUP_HREF} className="w-full">
+          Choisir ce pack
         </Button>
       </div>
       <div className="flex w-full flex-col gap-4 px-5 pb-5 pt-1">
-        <p className="al-p12">What's included</p>
+        <p className="al-p12">Ce que tu peux en faire</p>
         <ul className="flex w-full flex-col gap-3">
           {plan.points.map((p) => (
             <li key={p} className="flex items-center gap-1.5">
@@ -174,27 +213,27 @@ function PlanCard({ plan, yearly }: { plan: (typeof PLANS)[number]; yearly: bool
   if (!plan.popular) return <article className="al-card w-full overflow-hidden">{body}</article>;
   return (
     <article className="al-pop flex w-full flex-col items-center gap-2 rounded-[20px] bg-al-blue px-1 pb-1 pt-2">
-      <p className="al-p14 !text-white">Most Popular</p>
+      <p className="al-p14 !text-white">Recommandé</p>
       {body}
     </article>
   );
 }
 
 export function Pricing() {
-  const [yearly, setYearly] = useState(false);
+  const [inEuro, setInEuro] = useState(false);
   return (
     <Section id="pricing" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="Our Pricing"
-        title="Choose the best Plan that suites you"
-        text="Flexible pricing built for every stage — from startup to scale, no hidden fees."
+        tag="Tarifs"
+        title="Des crédits, sans abonnement"
+        text="Tu recharges quand tu en as besoin. Une action n’est débitée que si elle réussit."
       />
       <Reveal y={60} delay={0.4} amount={0} className="flex w-full flex-col items-center gap-10">
-        <BillingToggle yearly={yearly} onChange={setYearly} />
+        <CurrencyToggle inEuro={inEuro} onChange={setInEuro} />
         <div className="flex w-full flex-col items-stretch gap-5 desk:flex-row desk:items-end">
           {PLANS.map((p) => (
             <div key={p.name} className="desk:flex-1">
-              <PlanCard plan={p} yearly={yearly} />
+              <PlanCard plan={p} inEuro={inEuro} />
             </div>
           ))}
         </div>
@@ -204,32 +243,32 @@ export function Pricing() {
 }
 
 const OTHERS = [
-  'Data lives in too many places',
-  'Reporting eats up hours',
-  'Insights are too generic',
-  'No smart guidance for decisions',
-  'Hard to see what’s really working',
+  'Un profil qui ne dit pas ce que tu cherches',
+  'Des heures à chercher quoi écrire',
+  'Des conseils génériques, souvent en anglais',
+  'Des messages qui restent sans réponse',
+  'Aucune idée de ce qui progresse',
 ];
 const OURS = [
-  'All your metrics, one platform',
-  'Track what drives growth',
-  'Insights tailored to your goals',
-  'AI suggests your next move',
-  'Clear path to consistent growth',
+  'Un audit et des réécritures à copier',
+  'Une stratégie et un plan de publication',
+  'Des posts rédigés dans ta voix',
+  'Les bonnes personnes, les bons messages',
+  'Un score qui montre tes progrès',
 ];
 
 export function Comparison() {
   return (
     <Section id="why" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="Why Alytics"
-        title="A smarter way to grow with data"
-        text="Turn complex metrics into clear insights that help you make better decisions, faster."
+        tag="Pourquoi nous"
+        title="Arrête de deviner ce qui marche"
+        text="Un parcours guidé plutôt que des conseils épars et des essais au hasard."
       />
       <Reveal y={60} delay={0.4} amount={0} className="flex w-full justify-center">
         <div className="al-card flex w-full max-w-[800px] flex-col gap-5 p-2.5 tab:flex-row">
           <div className="flex flex-1 flex-col gap-5 p-5">
-            <h3 className="al-h3">Other Tools</h3>
+            <h3 className="al-h3">Seul face à LinkedIn</h3>
             <ul className="flex flex-col gap-3">
               {OTHERS.map((t) => (
                 <li key={t} className="flex items-center gap-1.5">
@@ -242,7 +281,7 @@ export function Comparison() {
           <div className="al-ours flex flex-1 flex-col gap-5 rounded-[14px] bg-white p-5 tab:rounded-[20px]">
             <div className="flex items-center gap-1.5">
               <InlineSvg svg={svg.logo} className="h-[30px] w-[30px]" />
-              <h3 className="al-h3">Alytics</h3>
+              <h3 className="al-h3">Optimisation</h3>
             </div>
             <ul className="flex flex-col gap-3">
               {OURS.map((t) => (
@@ -261,24 +300,24 @@ export function Comparison() {
 
 const FAQS = [
   {
-    q: 'How does your platform track feature usage?',
-    a: 'We automatically collect interaction data across your product and visualize which features are being used most — no manual tagging needed.',
+    q: 'Faut-il donner mon mot de passe LinkedIn ?',
+    a: 'Non, jamais. Tu importes le PDF de ton profil, que LinkedIn génère en un clic, ou tu colles tes sections. L’outil ne se connecte pas à ton compte.',
   },
   {
-    q: 'Do I need technical skills to use Alytics?',
-    a: "Not at all. Alytics is built for teams of all sizes. Whether you're in marketing, product, or operations, the interface is intuitive and requires no coding.",
+    q: 'Comment fonctionnent les crédits ?',
+    a: 'Tu achètes un pack, sans abonnement. Chaque action affiche son coût avant que tu la lances, et les crédits ne sont débités que si elle réussit.',
   },
   {
-    q: 'Can Alytics integrate with tools we already use?',
-    a: 'Yes. Alytics integrates with major tools like Stripe, Google Analytics, HubSpot, and more. You can also connect via API or no-code platforms.',
+    q: 'Comment se passe le paiement ?',
+    a: 'Par mobile money, sur la page sécurisée de notre partenaire de paiement. Pas besoin de carte bancaire, et rien n’est prélevé automatiquement.',
   },
   {
-    q: 'Is my data secure on Alytics?',
-    a: 'Absolutely. We use enterprise-grade encryption and follow best practices in data privacy and compliance.',
+    q: 'Je n’ai pas encore de profil LinkedIn. Ça marche quand même ?',
+    a: 'Oui. Indique-le au démarrage : l’outil construit ton profil avec toi, section par section, prêt à copier sur LinkedIn.',
   },
   {
-    q: 'Can I try Alytics before committing?',
-    a: 'Yes, we offer a free trial so you can explore all features before upgrading to a paid plan.',
+    q: 'L’outil publie-t-il à ma place ?',
+    a: 'Non, tu gardes la main. Tu copies tes textes, tes posts et tes messages, puis tu les publies toi-même sur LinkedIn.',
   },
 ];
 
@@ -333,9 +372,9 @@ export function Faq() {
   return (
     <Section id="faq" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="FAQ's"
-        title="Common questions with Clear answers"
-        text="Here are answers to the most common things people ask before getting started."
+        tag="FAQ"
+        title="Tes questions, nos réponses"
+        text="Ce qu’on nous demande le plus souvent avant de commencer."
       />
       <Reveal y={60} delay={0.4} amount={0} className="flex w-full max-w-[800px] flex-col gap-5">
         {FAQS.map((f, i) => (

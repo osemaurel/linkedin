@@ -1,7 +1,28 @@
 import { useRef, type CSSProperties } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
-import { clientLogos, img, svg } from '../assets';
+import {
+  Briefcase,
+  Calculator,
+  CalendarDays,
+  CodeXml,
+  Gauge,
+  GraduationCap,
+  Handshake,
+  Laptop,
+  Lightbulb,
+  PenLine,
+  Rocket,
+  Scale,
+  Stethoscope,
+  Users,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
+import { img, svg } from '../assets';
 import { FRAMER_EASE } from '../components/anim';
+import { FLAGS } from '../components/flagData';
+import { Flag } from '../components/Illustrations';
+import { SIGNUP_HREF } from '../components/links';
 import { Button, InlineSvg } from '../components/primitives';
 import { Ticker } from '../components/Ticker';
 
@@ -13,10 +34,21 @@ const appear = (y: number, delay: number, extra: Record<string, number> = {}) =>
 });
 
 /**
- * Icônes flottantes : inclinaison d'arrivée, puis deux boucles aller-retour (rotation de
- * l'enveloppe, montée et descente du contenu), aux durées de l'original.
+ * Icônes flottantes, une par grand module (audit, réseau, Studio, plan éditorial) :
+ * inclinaison d'arrivée, puis deux boucles aller-retour (rotation de l'enveloppe, montée et
+ * descente du contenu), aux durées de l'original.
  */
-const FLOATING = [
+const FLOATING: {
+  pos: string;
+  tilt: number;
+  spin: number;
+  spinFor: number;
+  lift: number;
+  liftFor: number;
+  delay: number;
+  icon: LucideIcon;
+  color: string;
+}[] = [
   {
     pos: 'top-[30px] left-[60px] tab:max-desk:-top-8 tab:max-desk:left-7',
     tilt: -8,
@@ -25,6 +57,8 @@ const FLOATING = [
     lift: -15,
     liftFor: 2.5,
     delay: 0.5,
+    icon: Gauge,
+    color: '#126dfb',
   },
   {
     pos: 'top-[250px] left-[60px] tab:max-desk:left-10',
@@ -34,6 +68,8 @@ const FLOATING = [
     lift: 25,
     liftFor: 2,
     delay: 0.5,
+    icon: Users,
+    color: '#121212',
   },
   {
     pos: 'top-[30px] right-[60px] tab:max-desk:-top-8 tab:max-desk:right-8',
@@ -43,6 +79,8 @@ const FLOATING = [
     lift: -22,
     liftFor: 3,
     delay: 0.6,
+    icon: PenLine,
+    color: '#ff5a1f',
   },
   {
     pos: 'top-[250px] right-[80px] tab:max-desk:right-10',
@@ -52,6 +90,8 @@ const FLOATING = [
     lift: 25,
     liftFor: 2.5,
     delay: 0.5,
+    icon: CalendarDays,
+    color: '#2236f2',
   },
 ];
 
@@ -83,11 +123,12 @@ function FloatingIcon({ index }: { index: number }) {
             repeatType: 'mirror',
           }}
         >
-          <div className="al-mirror relative h-[65px] w-[65px] overflow-hidden rounded-xl bg-al-page desk:h-20 desk:w-20">
-            <img
-              src={img.heroIcons[index]}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
+          <div className="al-mirror relative flex h-[65px] w-[65px] items-center justify-center overflow-hidden rounded-xl bg-al-page desk:h-20 desk:w-20">
+            <f.icon
+              aria-hidden="true"
+              className="h-8 w-8 desk:h-10 desk:w-10"
+              style={{ color: f.color }}
+              strokeWidth={2.2}
             />
           </div>
         </motion.div>
@@ -117,7 +158,7 @@ function Dashboard() {
         <div className="al-dash-glow relative aspect-[1.53333] w-full rounded-lg tab:rounded-[19px] desk:rounded-[28px]">
           <img
             src={img.heroDashboard}
-            alt="Tableau de bord Alytics : revenus, clients, croissance et objectifs"
+            alt="Tableau de bord d’Optimisation : prochaine étape, score du profil, avancement et activité récente"
             className="absolute inset-0 h-full w-full rounded-[inherit] object-cover"
           />
         </div>
@@ -126,10 +167,25 @@ function Dashboard() {
   );
 }
 
-function ClientLogos() {
+const PROFILES: { icon: LucideIcon; label: string }[] = [
+  { icon: GraduationCap, label: 'Étudiants' },
+  { icon: Scale, label: 'Juristes' },
+  { icon: Wrench, label: 'Ingénieurs' },
+  { icon: Handshake, label: 'Commerciaux' },
+  { icon: Lightbulb, label: 'Consultants' },
+  { icon: Laptop, label: 'Freelances' },
+  { icon: Rocket, label: 'Entrepreneurs' },
+  { icon: Briefcase, label: 'Cadres' },
+  { icon: Calculator, label: 'Comptables' },
+  { icon: CodeXml, label: 'Développeurs' },
+  { icon: Stethoscope, label: 'Santé' },
+];
+
+/** Bandeau des profils visés, à la place des logos clients de l'original. */
+function Profiles() {
   return (
     <div className="flex w-full flex-col items-center gap-5 desk:gap-6">
-      <h5 className="al-h5 text-center text-al-ink">Blindly trusted by</h5>
+      <h5 className="al-h5 text-center text-al-ink">Pensé pour tous les profils</h5>
       <div className="w-[calc(100%-20px)] tab:w-[72%]">
         <div className="px-4 opacity-70 tab:px-5">
           <Ticker
@@ -143,14 +199,14 @@ function ClientLogos() {
                   'linear-gradient(270deg, #0000 0%, #000 20.6%, #000 50%, #000 80%, #0000 100%)',
               } as CSSProperties
             }
-            items={clientLogos.map((l) => (
-              <InlineSvg
-                key={l.name}
-                svg={l.svg}
-                label={l.name}
-                className="h-[35px]"
-                style={{ width: l.width }}
-              />
+            items={PROFILES.map(({ icon: Icon, label }) => (
+              <span
+                key={label}
+                className="flex h-[35px] items-center gap-2 whitespace-nowrap text-[22px] tracking-[-0.04em] text-[#0a0d12]"
+              >
+                <Icon aria-hidden="true" className="h-6 w-6" strokeWidth={2.4} />
+                {label}
+              </span>
             ))}
           />
         </div>
@@ -178,44 +234,52 @@ export function Hero() {
               style={{ '--al-border-color': '#126dfb' } as CSSProperties}
             >
               <div className="relative h-[22px] w-[58px]">
-                {img.avatarTag.map((src, i) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt=""
-                    className="absolute top-0 h-[22px] w-[22px] rounded-[20%] object-cover shadow-[0_0_0_1px_#e1eaf8]"
+                {FLAGS.slice(0, 3).map((f, i) => (
+                  <span
+                    key={f.code}
+                    className="absolute top-0 h-[22px] w-[22px]"
                     style={{ left: [0, 18, 34][i] }}
-                  />
+                  >
+                    <Flag
+                      art={f.art}
+                      label={f.name}
+                      className="block h-[22px] w-[22px] overflow-hidden rounded-[20%] shadow-[0_0_0_2px_#e1eaf8]"
+                    />
+                  </span>
                 ))}
               </div>
-              <p className="al-p14 whitespace-pre !text-al-blue">Trusted by 1M+ users</p>
+              <p className="al-p14 whitespace-pre !text-al-blue">
+                Pensé pour l’Afrique francophone
+              </p>
             </motion.div>
 
             <div className="flex w-full flex-col items-center gap-2.5 text-center">
               <motion.h1 {...appear(60, 0.2)} className="al-h1 w-full max-w-[700px] text-balance">
-                Turn scattered data into smart decisions
+                Transforme ton profil LinkedIn en opportunités
               </motion.h1>
               <motion.p
                 {...appear(80, 0.3)}
                 className="al-p w-full max-w-[300px] text-balance tab:max-w-[400px]"
               >
-                One simple dashboard to track your SaaS growth, MRR, churn and user behavior—without
-                the chaos.
+                Audit, réécritures prêtes à copier, posts et prospection&nbsp;: tout pour décrocher
+                un poste ou des clients.
               </motion.p>
             </div>
           </div>
 
           <motion.div {...appear(60, 0.4)} className="flex flex-col items-center gap-2.5">
-            <Button href="#pricing">Get Started For Free</Button>
+            <Button href={SIGNUP_HREF}>Créer mon compte</Button>
             <div className="flex items-center gap-[5px]">
               <InlineSvg svg={svg.creditCard} className="h-[21px] w-[21px] text-al-blue" />
-              <p className="al-p14 !text-al-ink">No credit card required</p>
+              <p className="al-p14 !text-al-ink">
+                Sans carte bancaire&nbsp;: paiement mobile money
+              </p>
             </div>
           </motion.div>
         </div>
 
         <Dashboard />
-        <ClientLogos />
+        <Profiles />
       </div>
     </section>
   );

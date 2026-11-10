@@ -19,8 +19,8 @@ import Compte from './pages/Compte';
 import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
-// Copie de la page Alytics, base de la future page d'accueil : chargée à la demande.
-const AlyticsLanding = lazy(() => import('./landing/AlyticsLanding'));
+// Page d'accueil publique (marque Optimisation) : chargée à la demande.
+const Landing = lazy(() => import('./landing/Landing'));
 
 // Centre de contrôle : chargé à la demande, jamais téléchargé par un utilisateur normal.
 const AdminOverview = lazy(() => import('./pages/admin/Overview'));
@@ -53,7 +53,7 @@ export default function App() {
         path="landing"
         element={
           <Suspense fallback={null}>
-            <AlyticsLanding />
+            <Landing />
           </Suspense>
         }
       />

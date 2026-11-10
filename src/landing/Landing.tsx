@@ -4,19 +4,19 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { Hero } from './sections/Hero';
 import { Benefits, Features, HowItWorks } from './sections/Features';
-import { Integrations, Testimonials } from './sections/Social';
+import { Africa, Audiences } from './sections/Social';
 import { Comparison, Faq, Pricing } from './sections/Plans';
-import { Blogs, Newsletter } from './sections/Stories';
+import { FinalCall, Tips } from './sections/Stories';
 import './landing.css';
 
 /**
- * Copie de la page Alytics (modèle Framer), base de la future page d'accueil.
- * Même structure, mêmes ressources, mêmes animations et défilement adouci (Lenis, 1 s).
+ * Page d'accueil d'Optimisation. Mise en page, police, couleurs et animations reprises du
+ * modèle Alytics (Framer) ; textes, marque et illustrations propres au produit.
  */
-export default function AlyticsLanding() {
+export default function Landing() {
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = 'Alytics - The Perfect Saas Template';
+    document.title = 'Optimisation · Transforme ton profil LinkedIn en opportunités';
     const body = document.body.style;
     const previousBg = body.backgroundColor;
     body.backgroundColor = '#fcfcfc';
@@ -46,13 +46,13 @@ export default function AlyticsLanding() {
         <Features />
         <Benefits />
         <HowItWorks />
-        <Integrations />
-        <Testimonials />
+        <Africa />
+        <Audiences />
         <Pricing />
         <Comparison />
         <Faq />
-        <Blogs />
-        <Newsletter />
+        <Tips />
+        <FinalCall />
       </main>
       <Footer />
     </div>

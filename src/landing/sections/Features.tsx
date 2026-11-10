@@ -1,28 +1,36 @@
-import { img, svg } from '../assets';
+import type { ComponentType } from 'react';
+import { svg } from '../assets';
+import {
+  AuditIllustration,
+  AuditStepIllustration,
+  ImportIllustration,
+  NetworkIllustration,
+  ProgressIllustration,
+  RewritesIllustration,
+  StudioIllustration,
+} from '../components/Illustrations';
 import { InlineSvg, Reveal, Section, SectionHeading } from '../components/primitives';
 
-const FEATURES: { image: string; title: string; text: string; tabletText?: string }[] = [
+const FEATURES: { art: ComponentType; title: string; text: string }[] = [
   {
-    image: img.featureUnifiedMetrics,
-    title: 'Unified Metrics',
-    text: 'See your MRR and active users in one clean, unified view — no more switching tabs.',
+    art: AuditIllustration,
+    title: 'Audit de ton profil',
+    text: 'Un score global et par section, pour voir d’un coup d’œil ce qui te freine.',
   },
   {
-    image: img.featureAiInsights,
-    title: 'AI Growth Insights',
-    text: 'Actionable suggestions from your data, without digging into spreadsheets or dashboards.',
-    // Sur tablette, l'original raccourcit ce texte.
-    tabletText: 'Actionable suggestions from your data, without digging into spreadsheets .',
+    art: RewritesIllustration,
+    title: 'Réécritures prêtes à copier',
+    text: 'Pas de conseils vagues : ton nouveau titre et ton résumé, en plusieurs variantes.',
   },
   {
-    image: img.featureUsageTracking,
-    title: 'Product Usage Tracking',
-    text: 'Track how users engage with your app live to uncover patterns and optimize features.',
+    art: StudioIllustration,
+    title: 'Studio de contenu',
+    text: 'Des posts rédigés dans ta voix, avec carrousel ou image, prêts à publier.',
   },
   {
-    image: img.featureImpactAnalysis,
-    title: 'Feature Impact Analysis',
-    text: 'Know exactly which features drive long-term retention—and which ones don’t.',
+    art: NetworkIllustration,
+    title: 'Mon réseau',
+    text: 'Les bonnes personnes à contacter, les bons messages et un suivi de tes relances.',
   },
 ];
 
@@ -30,29 +38,20 @@ export function Features() {
   return (
     <Section id="features" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="Unique Features"
-        title="Make your platform work harder for you"
-        text="Streamline your business with unified metrics and AI-powered analytics—all in one place."
+        tag="Fonctionnalités"
+        title="Tout ce qu’il faut pour être remarqué"
+        text="De l’audit de ton profil au premier message envoyé, chaque étape prépare la suivante."
       />
       <div className="grid w-full grid-cols-1 gap-5 tab:grid-cols-2">
         {FEATURES.map((f, i) => (
           <Reveal key={f.title} y={80} delay={i % 2 === 0 ? 0.2 : 0.4} className="h-full">
             <article className="al-card flex h-full flex-col gap-4 px-2.5 pb-6 pt-2.5 tab:gap-5 tab:px-4 tab:pt-4">
               <div className="aspect-[1.80695] w-full overflow-hidden rounded-xl tab:rounded-[10px]">
-                <img src={f.image} alt="" className="h-full w-full object-cover" />
+                <f.art />
               </div>
               <div className="flex flex-col gap-1 px-2 tab:gap-2">
                 <h4 className="al-h4">{f.title}</h4>
-                <p className="al-p max-w-[400px] text-balance">
-                  {f.tabletText ? (
-                    <>
-                      <span className="tab:max-desk:hidden">{f.text}</span>
-                      <span className="hidden tab:max-desk:inline">{f.tabletText}</span>
-                    </>
-                  ) : (
-                    f.text
-                  )}
-                </p>
+                <p className="al-p max-w-[400px] text-balance">{f.text}</p>
               </div>
             </article>
           </Reveal>
@@ -65,33 +64,33 @@ export function Features() {
 const BENEFITS = [
   {
     icon: svg.benefitRealtime,
-    title: 'Real-Time Tracking',
-    text: 'Monitor user activity instantly for smarter decision-making.',
+    title: 'Des résultats dès le début',
+    text: 'Ton score, tes points faibles et des réécritures dès ton premier audit.',
   },
   {
     icon: svg.benefitAllInOne,
-    title: 'All-in-One View',
-    text: 'Keep all your analytics in one place, without jumping between tools.',
+    title: 'Tout au même endroit',
+    text: 'Profil, contenu et prospection dans un seul outil qui garde ton contexte.',
   },
   {
     icon: svg.benefitActionable,
-    title: 'Actionable Insights',
-    text: 'Track the metrics that matter most for sustainable business growth.',
+    title: 'Prêt à publier',
+    text: 'Des textes à copier tels quels sur LinkedIn, pas des listes de conseils.',
   },
   {
     icon: svg.benefitSecure,
-    title: 'Secure Data',
-    text: 'Keep your analytics safe with advanced security and strong encryption.',
+    title: 'Ton compte reste à toi',
+    text: 'Aucun mot de passe LinkedIn demandé, rien n’est publié à ta place.',
   },
   {
     icon: svg.benefitReports,
-    title: 'Custom Reports',
-    text: 'Create tailored reports that fit your needs and highlight key insights.',
+    title: 'Une régularité tenue',
+    text: 'Un plan éditorial sur 30, 60 ou 90 jours, avec un angle pour chaque créneau.',
   },
   {
     icon: svg.benefitSimple,
-    title: 'Simple to Use',
-    text: 'Navigate easily—no steep learning curve, start making better decisions quickly.',
+    title: 'En français, pour ta région',
+    text: 'Le tutoiement, les codes locaux et des exemples qui parlent à ton marché.',
   },
 ];
 
@@ -116,9 +115,9 @@ export function Benefits() {
   return (
     <Section id="benefits" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="Benefits"
-        title="Benefits That Truly Matter to You"
-        text="Monitor metrics as they happen, so you can respond quickly and keep your goals on track."
+        tag="Avantages"
+        title="Pensé pour avancer vite, et bien"
+        text="Moins de temps à chercher quoi écrire, plus de temps pour les vraies opportunités."
       />
       <div className="flex w-full flex-col gap-5">
         {rows.map((row, r) => {
@@ -143,21 +142,21 @@ export function Benefits() {
   );
 }
 
-const STEPS = [
+const STEPS: { art: ComponentType; title: string; text: string }[] = [
   {
-    image: img.stepConnect,
-    title: 'Connect your product',
-    text: 'Integrate in minutes with your existing stack—no engineering lift required.',
+    art: ImportIllustration,
+    title: 'Importe ton profil',
+    text: 'Le PDF de ton profil LinkedIn ou un simple copier-coller. Pas encore de compte ? On le construit ensemble.',
   },
   {
-    image: img.stepAnalyze,
-    title: 'Analyze User Behavior',
-    text: 'Track user activity, uncover trends, and turn complex data into actionable insights.',
+    art: AuditStepIllustration,
+    title: 'Applique ton audit',
+    text: 'Ton score, tes points faibles et des réécritures à copier en un clic sur LinkedIn.',
   },
   {
-    image: img.stepOptimize,
-    title: 'Optimize & Grow',
-    text: 'Use AI recommendations to improve retention & drive sustainable growth.',
+    art: ProgressIllustration,
+    title: 'Publie et prospecte',
+    text: 'Des posts dans ta voix, des messages d’approche, et un score qui progresse.',
   },
 ];
 
@@ -165,16 +164,16 @@ export function HowItWorks() {
   return (
     <Section id="how-it-works" containerClassName="gap-10 tab:gap-12 desk:gap-14">
       <SectionHeading
-        tag="How It Works"
-        title="Get clear answers in 3 simple steps"
-        text="From data to clarity—uncover insights, take action, and grow smarter in three simple steps."
+        tag="Comment ça marche"
+        title="Trois étapes pour un profil qui attire"
+        text="Importe ton profil, applique l’audit, puis publie et prospecte avec régularité."
       />
       <div className="grid w-full grid-cols-1 gap-5 tab:grid-cols-2 desk:grid-cols-3">
         {STEPS.map((s, i) => (
           <Reveal key={s.title} y={60} delay={0.2 * (i + 1)} className="h-full">
             <article className="al-card flex h-full flex-col gap-4 px-2.5 pb-6 pt-2.5 tab:gap-5 tab:px-4 tab:pt-4">
               <div className="aspect-[1.318] w-full overflow-hidden rounded-xl tab:rounded-[10px]">
-                <img src={s.image} alt="" className="h-full w-full object-cover" />
+                <s.art />
               </div>
               <div className="flex flex-col gap-1 px-2 tab:gap-2">
                 <h4 className="al-h4">{s.title}</h4>

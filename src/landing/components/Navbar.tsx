@@ -1,24 +1,29 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { svg } from '../assets';
+import { LOGIN_HREF, SIGNUP_HREF } from './links';
 import { Button, InlineSvg } from './primitives';
 
 const NAV_LINKS = [
-  { label: 'Features', href: '#features' },
-  { label: 'Benefits', href: '#benefits' },
-  { label: 'Integrations', href: '#integrations' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Fonctionnalités', href: '#features' },
+  { label: 'Avantages', href: '#benefits' },
+  { label: 'Pour qui', href: '#pour-qui' },
+  { label: 'Tarifs', href: '#pricing' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'Blogs', href: '#blogs' },
+  { label: 'Connexion', href: LOGIN_HREF },
 ];
 
 const navSpring = { type: 'spring', stiffness: 500, damping: 60, mass: 1 } as const;
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
-    <a href="#top" className={`flex items-center gap-1.5 ${className}`}>
+    <a
+      href="#top"
+      aria-label="Optimisation, retour en haut de page"
+      className={`flex items-center gap-1.5 ${className}`}
+    >
       <InlineSvg svg={svg.logo} className="h-[30px] w-[30px]" />
-      <span className="al-h4 text-al-ink">Alytics</span>
+      <span className="al-h4 text-al-ink">Optimisation</span>
     </a>
   );
 }
@@ -89,8 +94,8 @@ export function Navbar() {
               <NavLink key={l.href} {...l} />
             ))}
           </nav>
-          <Button href="#pricing" className="hidden desk:flex">
-            Get Template
+          <Button href={SIGNUP_HREF} className="hidden desk:flex">
+            Créer mon compte
           </Button>
 
           <button
@@ -123,8 +128,8 @@ export function Navbar() {
             {NAV_LINKS.map((l) => (
               <NavLink key={l.href} {...l} mobile onClick={() => setOpen(false)} />
             ))}
-            <Button href="#pricing" className="mt-[18px] w-full">
-              Get Template
+            <Button href={SIGNUP_HREF} className="mt-[18px] w-full">
+              Créer mon compte
             </Button>
           </nav>
         )}
