@@ -281,7 +281,7 @@ export function Comparison() {
           <div className="al-ours flex flex-1 flex-col gap-5 rounded-[14px] bg-white p-5 tab:rounded-[20px]">
             <div className="flex items-center gap-1.5">
               <InlineSvg svg={svg.logo} className="h-[30px] w-[30px]" />
-              <h3 className="al-h3">Optimisation</h3>
+              <h3 className="al-h3">Uptimizz</h3>
             </div>
             <ul className="flex flex-col gap-3">
               {OURS.map((t) => (

@@ -71,7 +71,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col gap-2.5 border-t border-al-line pt-5 tab:flex-row tab:items-center tab:justify-between">
-          <p className="al-p !text-al-ink">© 2026 Optimisation</p>
+          <p className="al-p !text-al-ink">© 2026 Uptimizz</p>
           <p className="al-p !text-al-ink">Non affilié à LinkedIn</p>
         </div>
       </div>

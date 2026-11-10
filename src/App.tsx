@@ -19,7 +19,7 @@ import Compte from './pages/Compte';
 import Paiement from './pages/Paiement';
 import NotFound from './pages/NotFound';
 
-// Page d'accueil publique (marque Optimisation) : chargée à la demande.
+// Page d'accueil publique (marque Uptimizz) : chargée à la demande.
 const Landing = lazy(() => import('./landing/Landing'));
 
 // Centre de contrôle : chargé à la demande, jamais téléchargé par un utilisateur normal.
